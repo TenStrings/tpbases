@@ -138,6 +138,7 @@ CREATE TABLE evento (
 CREATE TABLE permite_acceder (
 	medio_id integer unsigned,
     categoria_id integer unsigned,
+    descuento integer unsigned NOT NULL,
     PRIMARY KEY (medio_id, categoria_id),
     FOREIGN KEY (medio_id) REFERENCES medio_entretenimiento(medio_id),
     FOREIGN KEY (categoria_id) REFERENCES categoria(categoria_id)
