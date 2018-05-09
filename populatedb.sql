@@ -115,6 +115,50 @@ INSERT INTO
     atraccion (atraccion_id, parque_id, edad_desde, edad_hasta, altura_min)
 VALUES(@id_april_in_paris, @id_medio_parque_astronomicus, 0, 99, 3);
 
+/* Eventos */
+/* Ubicacion */
+
+-- Bypass fest
+INSERT INTO
+	ubicacion(pais, provincia, localidad, codigo_postal, calle, altura, piso, departamento)
+VALUES('Argentina', 'Rio Negro', 'Bariloche', 8400, 'Catedral', 184, NULL, NULL);
+SET @id_ubicacion_evento_bypass_fest = LAST_INSERT_ID();
+
+INSERT INTO 
+	medio_entretenimiento (precio, nombre, tipo)
+VALUES (300, 'Bypass Fest', 'EVENTO');
+SET @id_bypass_fest = LAST_INSERT_ID();
+
+SET @cuit_empresa_cara = 12345678;
+INSERT INTO 
+	empresa_organizadora(cuit, razon_social)
+VALUES(@cuit_empresa_cara, 1);
+
+INSERT INTO
+	evento(evento_id, cuit_organizadora, ubicacion_id, horario_desde, horario_hasta)
+VALUES(@id_bypass_fest, @cuit_empresa_cara, @id_ubicacion_evento_bypass_fest, '2018-06-04 01:00:15', '2018-06-04 07:00:30');
+
+-- Fiesta bizarra
+
+INSERT INTO
+	ubicacion(pais, provincia, localidad, codigo_postal, calle, altura, piso, departamento)
+VALUES('Argentina', 'Buenos Aires', 'CABA', 5842, 'Combate de los pozos', 58, 4, 8);
+SET @id_ubicacion_evento_fiesta_bizarra = LAST_INSERT_ID();
+
+INSERT INTO 
+	medio_entretenimiento (precio, nombre, tipo)
+VALUES (50, 'Fiesta Bizarra', 'EVENTO');
+SET @id_fiesta_bizarra = LAST_INSERT_ID();
+
+SET @cuit_empresa_barata = 87654321;
+INSERT INTO 
+	empresa_organizadora(cuit, razon_social)
+VALUES(@cuit_empresa_barata, 2);
+
+INSERT INTO
+	evento(evento_id, cuit_organizadora, ubicacion_id, horario_desde, horario_hasta)
+VALUES(@id_fiesta_bizarra, @cuit_empresa_barata, @id_ubicacion_evento_fiesta_bizarra, '2017-06-04 08:37:59', '2017-06-04 20:37:59');
+
 
 /*CONSUMOS*/
 /*mmm*/

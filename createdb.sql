@@ -118,8 +118,8 @@ CREATE TABLE atraccion (
 );
 
 CREATE TABLE empresa_organizadora (
-    razon_social integer unsigned,
     cuit integer unsigned,
+    razon_social integer unsigned,
     PRIMARY KEY (cuit)
 );
 
