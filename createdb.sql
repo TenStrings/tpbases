@@ -2,6 +2,19 @@ DROP DATABASE IF EXISTS tpbases;
 CREATE DATABASE tpbases;
 USE tpbases;
 
+CREATE TABLE ubicacion (
+    codigo_de_ubicacion integer unsigned NOT NULL AUTO_INCREMENT,
+    pais varchar(50),
+    provincia varchar(50),
+    localidad varchar(50),
+    codigo_postal varchar(50),
+    calle varchar(50),
+    altura smallint unsigned,
+    piso smallint unsigned,
+    departamento varchar(2),
+    PRIMARY KEY (codigo_de_ubicacion)
+);
+
 CREATE TABLE cliente (
     cliente_id integer unsigned NOT NULL AUTO_INCREMENT,
     nombre varchar(45) NOT NULL,
@@ -74,25 +87,13 @@ CREATE TABLE cambia_su (
     FOREIGN KEY (categoria_id) REFERENCES categoria(categoria_id)
 );
 
-CREATE TABLE ubicacion (
-    codigo_de_ubicacion integer unsigned unique NOT NULL,
-    pais varchar(50),
-    provincia varchar(50),
-    localidad varchar(50),
-    codigo_postal varchar(50),
-    calle varchar(50),
-    altura smallint unsigned,
-    piso smallint unsigned,
-    departamento varchar(2),
-    PRIMARY KEY (codigo_de_ubicacion)
-);
-
 CREATE TABLE medio_de_entretenimiento (
     medio_id integer unsigned NOT NULL AUTO_INCREMENT,
     precio decimal(5, 2),
     nombre varchar(50),
-    tipo varchar(10),
-    PRIMARY KEY (medio_id)
+    tipo varchar(10),/*Podría ser una foreign key*/
+    PRIMARY KEY (medio_id),
+    CHECK (tipo in ('PARQUE', 'ATRACCIÓN', 'EVENTO')) /*Y esto no haría falta*/
 );
 
 CREATE TABLE parque (
@@ -104,7 +105,7 @@ CREATE TABLE parque (
 );
 
 CREATE TABLE atraccion (
-    medio_id integer unsigned,
+    medio_id integer unsigned unique NOT NULL,
     medio_parque_id integer unsigned,
     edad_desde smallint,
     edad_hasta smallint,
@@ -126,5 +127,6 @@ CREATE TABLE evento (
     codigo_de_ubicacion integer,
     vigencia_desde timestamp DEFAULT '1970-01-01 00:00:01',
     vigencia_hasta timestamp DEFAULT '1970-01-01 00:00:01',
-    PRIMARY KEY (evento_id)
+    PRIMARY KEY (evento_id),
+    FOREIGN KEY(evento_id) REFERENCES medio_de_entretenimiento(medio_id)
 );
