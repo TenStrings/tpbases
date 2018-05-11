@@ -59,75 +59,36 @@ SET @id_tarjeta_michael_bloqueada = LAST_INSERT_ID();
 INSERT INTO
 	categoria(nombre, monto_subida, monto_permanencia)
 VALUES('BRONCE', 0, 0);
+SET @id_categoria_bronce = LAST_INSERT_ID();
 
 INSERT INTO
 	categoria(nombre, monto_subida, monto_permanencia)
 VALUES('PLATA', 500, 500);
+SET @id_categoria_plata = LAST_INSERT_ID();
 
 INSERT INTO
 	categoria(nombre, monto_subida, monto_permanencia)
 VALUES('ORO', 2000, 1800);
-
+SET @id_categoria_oro = LAST_INSERT_ID();
 -- Cambios de categoria
 
 INSERT INTO
 	cambia_su(fecha, numero_de_tarjeta, categoria_id)
-VALUES('2016-01-05', @id_tarjeta_tomas, 'BRONCE');
+VALUES('2016-01-05', @id_tarjeta_tomas, @id_categoria_bronce);
 
 INSERT INTO
 	cambia_su(fecha, numero_de_tarjeta, categoria_id)
-VALUES('2016-01-05', @id_tarjeta_carmichael, 'BRONCE');
+VALUES('2016-01-05', @id_tarjeta_carmichael, @id_categoria_bronce);
 
 INSERT INTO
 	cambia_su(fecha, numero_de_tarjeta, categoria_id)
-VALUES('2016-01-05', @id_tarjeta_michael, 'BRONCE');
+VALUES('2016-01-05', @id_tarjeta_michael, @id_categoria_bronce);
 
 INSERT INTO
 	cambia_su(fecha, numero_de_tarjeta, categoria_id)
-VALUES('2018-02-10', @id_tarjeta_tomas, 'PLATA');
-
--- Accesos
-
-INSERT INTO
-	permite_acceder(medio_id, categoria_id, descuento)
-VALUES(@id_la_rusa_loca, 'BRONCE', 10);
-
-INSERT INTO
-	permite_acceder(medio_id, categoria_id, descuento)
-VALUES(@id_medio_parque_las_venturas, 'BRONCE', 10);
-
-INSERT INTO
-	permite_acceder(medio_id, categoria_id, descuento)
-VALUES(@id_el_argento, 'BRONCE', 10);
-
-INSERT INTO
-	permite_acceder(medio_id, categoria_id, descuento)
-VALUES(@id_la_rusa_loca, 'PLATA', 20);
-
-INSERT INTO
-	permite_acceder(medio_id, categoria_id, descuento)
-VALUES(@id_medio_parque_las_venturas, 'PLATA', 20);
-
-INSERT INTO
-	permite_acceder(medio_id, categoria_id, descuento)
-VALUES(@id_el_argento, 'PLATA', 20);
-
-INSERT INTO
-	permite_acceder(medio_id, categoria_id, descuento)
-VALUES(@id_la_rusa_loca, 'ORO', 50);
-
-INSERT INTO
-	permite_acceder(medio_id, categoria_id, descuento)
-VALUES(@id_medio_parque_las_venturas, 'ORO', 50);
-
-INSERT INTO
-	permite_acceder(medio_id, categoria_id, descuento)
-VALUES(@id_el_argento, 'ORO', 50);
-
-
+VALUES('2018-02-10', @id_tarjeta_tomas, @id_categoria_plata);
 
 /*MEDIOS DE ENTRETENIMIENTO*/
-
 
 /*Parques*/
 
@@ -245,26 +206,64 @@ INSERT INTO
 	evento(evento_id, cuit_organizadora, ubicacion_id, horario_desde, horario_hasta)
 VALUES(@id_fiesta_bizarra, @cuit_empresa_barata, @id_ubicacion_evento_fiesta_bizarra, '2017-06-04 08:37:59', '2017-06-04 20:37:59');
 
+-- Accesos
+
+INSERT INTO
+	permite_acceder(medio_id, categoria_id, descuento)
+VALUES(@id_la_rusa_loca, @id_categoria_bronce, 10);
+
+INSERT INTO
+	permite_acceder(medio_id, categoria_id, descuento)
+VALUES(@id_medio_parque_las_venturas, @id_categoria_bronce, 10);
+
+INSERT INTO
+	permite_acceder(medio_id, categoria_id, descuento)
+VALUES(@id_el_argento, @id_categoria_bronce, 10);
+
+INSERT INTO
+	permite_acceder(medio_id, categoria_id, descuento)
+VALUES(@id_la_rusa_loca, @id_categoria_plata, 20);
+
+INSERT INTO
+	permite_acceder(medio_id, categoria_id, descuento)
+VALUES(@id_medio_parque_las_venturas, @id_categoria_plata, 20);
+
+INSERT INTO
+	permite_acceder(medio_id, categoria_id, descuento)
+VALUES(@id_el_argento, @id_categoria_plata, 20);
+
+INSERT INTO
+	permite_acceder(medio_id, categoria_id, descuento)
+VALUES(@id_la_rusa_loca, @id_categoria_oro, 50);
+
+INSERT INTO
+	permite_acceder(medio_id, categoria_id, descuento)
+VALUES(@id_medio_parque_las_venturas, @id_categoria_oro, 50);
+
+INSERT INTO
+	permite_acceder(medio_id, categoria_id, descuento)
+VALUES(@id_el_argento, @id_categoria_oro, 50);
+
 /*CONSUMOS Y FACTURAS*/
 INSERT INTO
 	 consumo(numero_de_factura, numero_de_tarjeta, medio_entretenimiento_id, importe, fecha_hora)
-VALUES(NULL, @id_tajeta_tomas, @id_la_rusa_loca, @precio_la_rusa_loca, '2018-01-05 14:43:42');
+VALUES(NULL, @id_tarjeta_tomas, @id_la_rusa_loca, @precio_la_rusa_loca, '2018-01-05 14:43:42');
 SET @id_consumo_tomas_1 = LAST_INSERT_ID();
 
 INSERT INTO
 	 consumo(numero_de_factura, numero_de_tarjeta, medio_entretenimiento_id, importe, fecha_hora)
-VALUES(NULL, @id_tajeta_tomas, @id_la_rusa_loca, @precio_la_rusa_loca, '2018-01-05 15:43:42');
+VALUES(NULL, @id_tarjeta_tomas, @id_la_rusa_loca, @precio_la_rusa_loca, '2018-01-05 15:43:42');
 SET @id_consumo_tomas_2 = LAST_INSERT_ID();
 
 INSERT INTO
 	 consumo(numero_de_factura, numero_de_tarjeta, medio_entretenimiento_id, importe, fecha_hora)
-VALUES(NULL, @id_tajeta_tomas, @id_el_argento, @precio_el_argento, '2018-02-03 16:49:34');
+VALUES(NULL, @id_tarjeta_tomas, @id_el_argento, @precio_el_argento, '2018-02-03 16:49:34');
 SET @id_consumo_tomas_3 = LAST_INSERT_ID();
 
 -- Todavia no tiene factura
 INSERT INTO
 	 consumo(numero_de_factura, numero_de_tarjeta, medio_entretenimiento_id, importe, fecha_hora)
-VALUES(NULL, @id_tajeta_tomas, @id_bypass_fest, @precio_bypass_fest, '2018-05-05 02:45:09');
+VALUES(NULL, @id_tarjeta_tomas, @id_bypass_fest, @precio_bypass_fest, '2018-05-05 02:45:09');
 SET @id_consumo_tomas_4 = LAST_INSERT_ID();
 
 -- Pago de la factura de consumos tomas 1 y 2

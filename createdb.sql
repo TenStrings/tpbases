@@ -16,7 +16,7 @@ CREATE TABLE ubicacion (
 );
 
 CREATE TABLE cliente (
-    cliente_id integer unsigned NOT NULL AUTO_INCREMENT,
+    cliente_id integer unsigned AUTO_INCREMENT,
     nombre varchar(45) NOT NULL,
     apellido varchar(45) NOT NULL,
     medio_de_pago integer NOT NULL,
@@ -60,10 +60,10 @@ CREATE TABLE telefono (
 );
 
 CREATE TABLE categoria (
-    categoria_id integer unsigned NOT NULL auto_increment, 
+    categoria_id integer unsigned AUTO_INCREMENT, 
     nombre varchar(30),
-    monto_subida decimal(5,2),
-    monto_permanencia decimal(5,2),
+    monto_subida decimal(10,2),
+    monto_permanencia decimal(10,2),
     PRIMARY KEY (categoria_id)
 );
 
