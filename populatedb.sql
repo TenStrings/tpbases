@@ -1,61 +1,84 @@
 USE tpbases;
 
-/*USUARIOS*/
+/*** CONVENCIONES ***/
+-- El sistema comienza el 1 de enero de 2018.
+-- El sistema soporta 3 medios de pago VISA, AMEX Y MASTERCARD
+-- Hay 3 categorias BRONCE, PLATA Y ORO. 
+-- Los descuentos de categorias superiores son mejores o iguales
 
-INSERT INTO 
+SET @fecha_inicio_programa = '2018-01-01';
+
+/*************  CLIENTES  **************/  
+
+-- NOTA: DESPUES HAY QUE CREAR UBICACION PARA TODOS, DICE QUE LA QUERES GUARDAR Y NO DEBERIA SER NULL
+
+SET @medio_de_pago_tomas ='VISA';
+INSERT INTO -- CONSUMIDOR FRECUENTE CATEGORIA GOLD 
     cliente(nombre, apellido, medio_de_pago, ubicacion_facturacion, 
             ubicacion_residencia,
             numero_de_documento)
-VALUES ('Tomás', 'Pastore', 1, NULL, NULL, 39560320);
+VALUES ('Tomás', 'Pastore', @medio_de_pago_tomas, NULL, NULL, 39560320);
 SET @id_tomas = LAST_INSERT_ID();
-INSERT INTO 
+
+SET @medio_de_pago_jacinto ='AMEX';
+INSERT INTO -- CONSUMIDOR MEDIO CATEGORIA PLATA
     cliente(nombre, apellido, medio_de_pago, ubicacion_facturacion, 
             ubicacion_residencia,
             numero_de_documento)
-VALUES ('Jacinto', 'Populea', 1, NULL, NULL, 40000000);
+VALUES ('Jacinto', 'Populea',@medio_de_pago_jacinto, NULL, NULL, 40000000);
 SET @id_jacinto = LAST_INSERT_ID();
-INSERT INTO 
+
+SET @medio_de_pago_carmichael = 'MASTERCARD';
+INSERT INTO -- CONSUMIDOR BAJO CATEGORIA BRONCE
     cliente(nombre, apellido, medio_de_pago, ubicacion_facturacion, 
             ubicacion_residencia,
             numero_de_documento)
-VALUES ('Carmichael', 'Buonavita', 2, NULL, NULL, 40000001);
+VALUES ('Carmichael', 'Buonavita',@medio_de_pago_carmichael, NULL, NULL, 40000001);
 SET @id_carmichael = LAST_INSERT_ID();
-INSERT INTO 
+
+SET @medio_de_pago_michael = 'MASTERCARD';
+INSERT INTO -- CLIENTE RATA (NUNCA CONSUMIO)
     cliente(nombre, apellido, medio_de_pago, ubicacion_facturacion, 
             ubicacion_residencia,
             numero_de_documento)
-VALUES ('Michael', 'Corleone', 2, NULL, NULL, 40000002);
+VALUES ('Michael', 'Corleone', @medio_de_pago_michael, NULL, NULL, 40000002);
 SET @id_michael = LAST_INSERT_ID();
 
+/*************  FIN CLIENTES  **************/
 
-/*TARJETAS Y CATEGORIAS*/
 
-INSERT INTO
+/*************  TARJETAS  **************/	
+
+INSERT INTO  -- TOMAS && BLOQUEADA EL 15/01/2018 PORQUE LA PERDIO 
+    tarjeta (cliente_id, foto, bloqueada)
+VALUES(@id_tomas, NULL, true); 
+SET @id_tarjeta_tomas_actualmente_bloqueada = LAST_INSERT_ID();
+
+INSERT INTO  -- TOMAS ACTIVA ACTUALMENTE
     tarjeta (cliente_id, foto, bloqueada)
 VALUES(@id_tomas, NULL, false); 
-SET @id_tarjeta_tomas = LAST_INSERT_ID();
+SET @id_tarjeta_tomas_actualmente_activa = LAST_INSERT_ID();
 
-INSERT INTO
+INSERT INTO -- JACINTO
     tarjeta (cliente_id, foto, bloqueada)
 VALUES(@id_jacinto, NULL, false); 
 SET @id_tarjeta_jacinto= LAST_INSERT_ID();
 
-INSERT INTO
+INSERT INTO -- CARMICHAEL
     tarjeta (cliente_id, foto, bloqueada)
 VALUES(@id_carmichael, NULL, false); 
 SET @id_tarjeta_carmichael= LAST_INSERT_ID();
 
-INSERT INTO
+INSERT INTO -- MICHAEL
     tarjeta (cliente_id, foto, bloqueada)
 VALUES(@id_michael, NULL, false); 
 SET @id_tarjeta_michael = LAST_INSERT_ID();
 
-INSERT INTO
-    tarjeta (cliente_id, foto, bloqueada)
-VALUES(@id_michael, NULL, true); 
-SET @id_tarjeta_michael_bloqueada = LAST_INSERT_ID();
+/*************  FIN DE TARJETAS  **************/
 
--- Categorias
+
+/***************** CATEGORIAS  ******************/
+
 INSERT INTO
 	categoria(nombre, monto_subida, monto_permanencia)
 VALUES('BRONCE', 0, 0);
@@ -70,217 +93,622 @@ INSERT INTO
 	categoria(nombre, monto_subida, monto_permanencia)
 VALUES('ORO', 2000, 1800);
 SET @id_categoria_oro = LAST_INSERT_ID();
--- Cambios de categoria
 
-INSERT INTO
+/*************  FIN DE CATEGORIAS  **************/
+
+
+/***************  CAMBIOS DE CATEGORIA  ****************/
+
+-- HISTORIAL DE CATEGORIAS PARA LA TARJETA DE TOMÁS
+
+INSERT INTO -- CATEGORIA INICIAL
 	cambia_su(fecha, numero_de_tarjeta, categoria_id)
-VALUES('2016-01-05', @id_tarjeta_tomas, @id_categoria_bronce);
+VALUES(@fecha_inicio_programa, @id_tarjeta_tomas_actualmente_bloqueada, @id_categoria_bronce);
 
-INSERT INTO
+SET @fecha_tomas_pierde_tarjeta = '2018-01-15';
+SET @id_categoria_tomas_tarjeta_perdida = @id_categoria_bronce;
+INSERT INTO -- CATEGORIA INICIAL NUEVA TARJETA
 	cambia_su(fecha, numero_de_tarjeta, categoria_id)
-VALUES('2016-01-05', @id_tarjeta_carmichael, @id_categoria_bronce);
+VALUES(@fecha_tomas_pierde_tarjeta, @id_tarjeta_tomas_actualmente_activa, @id_categoria_tomas_tarjeta_perdida);
 
-INSERT INTO
+SET @fecha_tomas_bronce_a_oro = '2018-02-10'; -- Sí, sube 2 de una porque es un consumista
+INSERT INTO -- SUBE DE CATEGORIA AL PAGAR EL MES DE ENERO
 	cambia_su(fecha, numero_de_tarjeta, categoria_id)
-VALUES('2016-01-05', @id_tarjeta_michael, @id_categoria_bronce);
+VALUES(@fecha_tomas_bronce_a_oro, @id_tarjeta_tomas_actualmente_activa, @id_categoria_oro);
 
-INSERT INTO
+
+-- HISTORIAL DE CATEGORIAS PARA LA TARJETA DE JACINTO
+
+INSERT INTO -- CATEGORIA INICIAL
 	cambia_su(fecha, numero_de_tarjeta, categoria_id)
-VALUES('2018-02-10', @id_tarjeta_tomas, @id_categoria_plata);
+VALUES(@fecha_inicio_programa, @id_tarjeta_jacinto, @id_categoria_bronce);
 
-/*MEDIOS DE ENTRETENIMIENTO*/
+SET @fecha_jacinto_bronce_a_plata = '2018-02-11';
+INSERT INTO -- SUBE DE CATEGORIA AL PAGAR EL MES DE ENERO
+	cambia_su(fecha, numero_de_tarjeta, categoria_id)
+VALUES(@fecha_jacinto_bronce_a_plata, @id_tarjeta_jacinto, @id_categoria_plata);
 
-/*Parques*/
+-- HISTORIAL DE CATEGORIAS PARA LA TARJETA DE CARMICHAEL
+
+INSERT INTO -- CATEGORIA INICIAL
+	cambia_su(fecha, numero_de_tarjeta, categoria_id)
+VALUES(@fecha_inicio_programa, @id_tarjeta_carmichael, @id_categoria_bronce);
+
+-- HISTORIAL DE CATEGORIAS PARA LA TARJETA DE MICHAEL
+
+INSERT INTO -- CATEGORIA INICIAL
+	cambia_su(fecha, numero_de_tarjeta, categoria_id)
+VALUES(@fecha_inicio_programa, @id_tarjeta_michael, @id_categoria_bronce);
+
+/*************  FIN CAMBIOS DE CATEGORIA  **************/
+
+
+/*************  MEDIOS DE ENTRETENIMIENTO  **************/
+
+/*********** Parques ************/
 
 /*Parque Las Venturas*/
+
+/* Lista de atracciones -> [la_rusa_loca, el_argento] */
+
 /*Ubicación*/
 INSERT INTO 
 	ubicacion (pais, provincia, localidad, codigo_postal, calle, altura, piso, departamento)
 VALUES ('Argentina', 'Mendoza', 'Mendoza', '95FF', 'Rivadavia', 544, NULL, NULL);
 SET @id_ubicacion_parque_las_venturas = LAST_INSERT_ID();
 /*Medio de entretenimiento*/
+SET @precio_parque_las_venturas = 300;
 INSERT INTO
 	medio_entretenimiento (precio, nombre, tipo)
-VALUES (100, 'Parque de Las Venturas', 'PARQUE');
-SET @id_medio_parque_las_venturas = LAST_INSERT_ID();
+VALUES (@precio_parque_las_venturas, 'Parque de Las Venturas', 'PARQUE');
+SET @id_parque_las_venturas = LAST_INSERT_ID();
 /*Parque*/
 INSERT INTO
 	parque (parque_id, ubicacion_id)
-VALUES (@id_medio_parque_las_venturas, @id_ubicacion_parque_las_venturas); 
+VALUES (@id_parque_las_venturas, @id_ubicacion_parque_las_venturas); 
 
 /*Atracciones del parque Las Venturas*/
 
-SET @precio_la_rusa_loca = 300;
+SET @precio_la_rusa_loca = 100;
 INSERT INTO medio_entretenimiento (precio, nombre, tipo)
-VALUES (@precio_la_rusa_loca, 'La Rusa Loca', 'ATRACCIÓN');
+VALUES (@precio_la_rusa_loca, 'La Rusa Loca', 'ATRACCION');
 SET @id_la_rusa_loca = LAST_INSERT_ID();
-
 INSERT INTO
     atraccion (atraccion_id, parque_id, edad_desde, edad_hasta, altura_min)
-VALUES(@id_la_rusa_loca, @id_medio_parque_las_venturas, 0, 99, 2);
+VALUES(@id_la_rusa_loca, @id_parque_las_venturas, 5, 80, '80 cm');
 
-SET @precio_el_argento = 350;
+SET @precio_el_argento = 50;
 INSERT INTO medio_entretenimiento (precio, nombre, tipo)
-VALUES (@precio_el_argento, 'El Argento', 'ATRACCIÓN');
+VALUES (@precio_el_argento, 'El Argento', 'ATRACCION');
 SET @id_el_argento = LAST_INSERT_ID();
-
 INSERT INTO
     atraccion (atraccion_id, parque_id, edad_desde, edad_hasta, altura_min)
-VALUES(@id_el_argento, @id_medio_parque_las_venturas, 0, 99, 3);
+VALUES(@id_el_argento, @id_parque_las_venturas, 2, 85,'50 cm');
 
 
 /*Parque Astronomicus*/
+
+/* Lista de atracciones -> [la_jazzy_rue, april_in_paris] */
+
 /*Ubicación*/
 INSERT INTO 
 ubicacion (pais, provincia, localidad, codigo_postal, calle, altura, piso, departamento)
 VALUES ('Francia', NULL, 'París', '2323XXRT', 'Jean Jaures', 144, NULL, NULL);
 SET @id_ubicacion_parque_astronomicus = LAST_INSERT_ID();
 /*Medio de entretenimiento*/
+SET @precio_parque_astronomicus = 300;
 INSERT INTO medio_entretenimiento (precio, nombre, tipo)
-VALUES (300.50, 'Parque Astronomicus', 'PARQUE');
-SET @id_medio_parque_astronomicus = LAST_INSERT_ID();
+VALUES (@precio_parque_astronomicus, 'Parque Astronomicus', 'PARQUE');
+SET @id_parque_astronomicus = LAST_INSERT_ID();
 /*Parque*/
 INSERT INTO parque (parque_id, ubicacion_id)
-VALUES (@id_medio_parque_astronomicus, @id_ubicacion_parque_astronomicus); 
+VALUES (@id_parque_astronomicus, @id_ubicacion_parque_astronomicus); 
 
 /*Atracciones del parque Astronomicus*/
-
+SET @precio_la_jazzy_rue = 200;
 INSERT INTO medio_entretenimiento (precio, nombre, tipo)
-VALUES (13.50, 'La Jazzy Rue', 'ATRACCIÓN');
+VALUES (@precio_la_jazzy_rue, 'La Jazzy Rue', 'ATRACCION');
 SET @id_la_jazzy_rue = LAST_INSERT_ID();
-
 INSERT INTO
     atraccion (atraccion_id, parque_id, edad_desde, edad_hasta, altura_min)
-VALUES(@id_la_jazzy_rue, @id_medio_parque_astronomicus, 0, 99, 2);
+VALUES(@id_la_jazzy_rue, @id_parque_astronomicus, 0, 99, '0 cm');
 
+SET @precio_april_in_paris = 150;
 INSERT INTO medio_entretenimiento (precio, nombre, tipo)
-VALUES (15.50, 'April in Paris', 'ATRACCIÓN');
+VALUES (@precio_april_in_paris, 'April in Paris', 'ATRACCION');
 SET @id_april_in_paris = LAST_INSERT_ID();
-
 INSERT INTO
     atraccion (atraccion_id, parque_id, edad_desde, edad_hasta, altura_min)
-VALUES(@id_april_in_paris, @id_medio_parque_astronomicus, 0, 99, 3);
+VALUES(@id_april_in_paris, @id_parque_astronomicus, 0, 99, '0 cm');
 
-/* Eventos */
+/***************** FIN PARQUES *****************/
+
+/******************** EVENTOS ******************/
+
+/* BYPASS FEST */
+
+/* Empresa organizadora*/
+SET @cuit_empresa_cara = '30-71004052-0'; -- poner uno posta
+INSERT INTO 
+	empresa_organizadora(cuit, razon_social)
+VALUES(@cuit_empresa_cara,'STARBUCKS COFFE ARGENTINA S.R.L.');
+
 /* Ubicacion */
-
--- Bypass fest
 INSERT INTO
 	ubicacion(pais, provincia, localidad, codigo_postal, calle, altura, piso, departamento)
-VALUES('Argentina', 'Rio Negro', 'Bariloche', 8400, 'Catedral', 184, NULL, NULL);
+VALUES('Argentina', 'Rio Negro', 'Bariloche', 2410, 'Catedral', 184, NULL, NULL);
 SET @id_ubicacion_evento_bypass_fest = LAST_INSERT_ID();
 
+/*EVENTO*/
 SET @precio_bypass_fest = 300;
 INSERT INTO 
 	medio_entretenimiento (precio, nombre, tipo)
 VALUES (@precio_bypass_fest, 'Bypass Fest', 'EVENTO');
 SET @id_bypass_fest = LAST_INSERT_ID();
 
-SET @cuit_empresa_cara = 12345678;
-INSERT INTO 
-	empresa_organizadora(cuit, razon_social)
-VALUES(@cuit_empresa_cara, 1);
-
 INSERT INTO
 	evento(evento_id, cuit_organizadora, ubicacion_id, horario_desde, horario_hasta)
-VALUES(@id_bypass_fest, @cuit_empresa_cara, @id_ubicacion_evento_bypass_fest, '2018-06-04 01:00:15', '2018-06-04 07:00:30');
+VALUES(@id_bypass_fest, @cuit_empresa_cara, @id_ubicacion_evento_bypass_fest, '2018-02-15 01:00:00', '2018-02-05 07:00:00');
 
--- Fiesta bizarra
 
+/* FIESTA BIZARRA */
+
+/*Empresa organizadora*/
+SET @cuit_empresa_barata = '30-71004032-3'; -- poner uno posta
+INSERT INTO 
+	empresa_organizadora(cuit, razon_social)
+VALUES(@cuit_empresa_barata, 'ANONIMUS S.A.');
+
+/*Ubicacion*/
 INSERT INTO
 	ubicacion(pais, provincia, localidad, codigo_postal, calle, altura, piso, departamento)
-VALUES('Argentina', 'Buenos Aires', 'CABA', 5842, 'Combate de los pozos', 58, 4, 8);
+VALUES('Argentina', 'Buenos Aires', 'CABA', 5842, 'Combate de los pozos', 58, 4, 'B');
 SET @id_ubicacion_evento_fiesta_bizarra = LAST_INSERT_ID();
 
+SET @precio_fiesta_bizarra = 200;
 INSERT INTO 
 	medio_entretenimiento (precio, nombre, tipo)
-VALUES (50, 'Fiesta Bizarra', 'EVENTO');
+VALUES (@precio_fiesta_bizarra, 'Fiesta Bizarra', 'EVENTO');
 SET @id_fiesta_bizarra = LAST_INSERT_ID();
-
-SET @cuit_empresa_barata = 87654321;
-INSERT INTO 
-	empresa_organizadora(cuit, razon_social)
-VALUES(@cuit_empresa_barata, 2);
-
 INSERT INTO
 	evento(evento_id, cuit_organizadora, ubicacion_id, horario_desde, horario_hasta)
-VALUES(@id_fiesta_bizarra, @cuit_empresa_barata, @id_ubicacion_evento_fiesta_bizarra, '2017-06-04 08:37:59', '2017-06-04 20:37:59');
+VALUES(@id_fiesta_bizarra, @cuit_empresa_barata, @id_ubicacion_evento_fiesta_bizarra, '2018-01-25 08:57:59', '2018-01-25 20:57:59');
 
--- Accesos
+/******************** FIN EVENTOS ******************/
 
+/***************************** FIN MEDIOS DE ENTRETENIMIENTO ************************/
+
+
+/*********  DESCUENTOS POR CATEGORIA (PERMITE ACCEDER)  **********/
+-- VER QUE ONDA LOS DESCUENTOS DE LOS EVENTOS, NO DEBERIAN ESTAR ATADOS A LA VIGENCIA DEL EVENTO DE ALGUNA FORMA?
+
+/****  BRONCE  ****/
+
+/*PARQUE LAS VENTURAS */
+SET @desc_parque_las_venturas_bronce = 10;
+INSERT INTO -- acceso con descuento a parque
+	permite_acceder(medio_id, categoria_id, descuento)
+VALUES(@id_parque_las_venturas, @id_categoria_bronce, @desc_parque_las_venturas_bronce);
+
+SET @desc_la_rusa_loca_bronce = 10;
+INSERT INTO -- acceso con descuento a parque
+	permite_acceder(medio_id, categoria_id, descuento)
+VALUES(@id_la_rusa_loca, @id_categoria_bronce, @desc_la_rusa_loca_bronce);
+
+SET @desc_el_argento_bronce = 10;
+INSERT INTO -- acceso con descuento a parque
+	permite_acceder(medio_id, categoria_id, descuento)
+VALUES(@id_el_argento, @id_categoria_bronce, @desc_el_argento_bronce);
+
+/*PARQUE ASTRONOMICUS*/
+SET @desc_parque_astronomicus_bronce = 0;
+INSERT INTO -- acceso sin descuento a parque
+	permite_acceder(medio_id, categoria_id, descuento)
+VALUES(@id_parque_astronomicus, @id_categoria_bronce, @desc_parque_astronomicus_bronce);
+
+SET @desc_la_jazzy_rue_bronce = 10;
+INSERT INTO -- acceso con descuento a atraccion
+	permite_acceder(medio_id, categoria_id, descuento)
+VALUES(@id_la_jazzy_rue, @id_categoria_bronce, @desc_la_jazzy_rue_bronce);
+
+SET @desc_april_in_paris_bronce = 0;
+INSERT INTO -- acceso sin descuento a atraccion
+	permite_acceder(medio_id, categoria_id, descuento)
+VALUES(@id_april_in_paris, @id_categoria_bronce, @desc_april_in_paris_bronce);
+
+/*EVENTO BYPASS FEST*/
+SET @desc_bypass_fest_bronce = 10;
+INSERT INTO -- acceso con descuento a evento
+	permite_acceder(medio_id, categoria_id, descuento)
+VALUES(@id_bypass_fest, @id_categoria_bronce, @desc_bypass_fest_bronce);
+
+/*EVENTO FIESTA BIZARRA*/
+SET @desc_fiesta_bizarra_bronce = 0;
+INSERT INTO -- acceso con descuento a evento
+	permite_acceder(medio_id, categoria_id, descuento)
+VALUES(@id_fiesta_bizarra, @id_categoria_bronce, @desc_fiesta_bizarra_bronce);
+
+/****  PLATA  ****/
+
+/*PARQUE LAS VENTURAS*/
+SET @desc_parque_las_venturas_plata = 20;
 INSERT INTO
 	permite_acceder(medio_id, categoria_id, descuento)
-VALUES(@id_la_rusa_loca, @id_categoria_bronce, 10);
+VALUES(@id_parque_las_venturas, @id_categoria_plata, @desc_parque_las_venturas_plata);
 
+SET @desc_la_rusa_loca_plata = 20;
 INSERT INTO
 	permite_acceder(medio_id, categoria_id, descuento)
-VALUES(@id_medio_parque_las_venturas, @id_categoria_bronce, 10);
+VALUES(@id_la_rusa_loca, @id_categoria_plata, @desc_la_rusa_loca_plata);
 
+SET @desc_el_argento_plata = 20;
 INSERT INTO
 	permite_acceder(medio_id, categoria_id, descuento)
-VALUES(@id_el_argento, @id_categoria_bronce, 10);
+VALUES(@id_el_argento, @id_categoria_plata, @desc_el_argento_plata);
 
+/*PARQUE ASTRONOMICUS*/
+SET @desc_parque_astronomicus_plata = 10;
+INSERT INTO -- acceso sin descuento a parque
+	permite_acceder(medio_id, categoria_id, descuento)
+VALUES(@id_parque_astronomicus, @id_categoria_plata, @desc_parque_astronomicus_plata);
+
+SET @desc_la_jazzy_rue_plata = 20;
+INSERT INTO -- acceso con descuento a atraccion
+	permite_acceder(medio_id, categoria_id, descuento)
+VALUES(@id_la_jazzy_rue, @id_categoria_plata, @desc_la_jazzy_rue_plata);
+
+SET @desc_april_in_paris_plata = 10;
+INSERT INTO -- acceso sin descuento a atraccion
+	permite_acceder(medio_id, categoria_id, descuento)
+VALUES(@id_april_in_paris, @id_categoria_plata, @desc_april_in_paris_plata);
+
+/*EVENTO BYPASS FEST*/
+SET @desc_bypass_fest_plata = 20;
+INSERT INTO -- acceso con descuento a evento
+	permite_acceder(medio_id, categoria_id, descuento)
+VALUES(@id_bypass_fest, @id_categoria_plata, @desc_bypass_fest_plata);
+
+/*EVENTO FIESTA BIZARRA*/
+SET @desc_fiesta_bizarra_plata = 10;
+INSERT INTO -- acceso con descuento a evento
+	permite_acceder(medio_id, categoria_id, descuento)
+VALUES(@id_fiesta_bizarra, @id_categoria_plata, @desc_fiesta_bizarra_plata);
+
+/****  ORO  ****/
+
+/*PARQUE LAS VENTURAS*/
+SET @desc_parque_las_venturas_oro = 50;
 INSERT INTO
 	permite_acceder(medio_id, categoria_id, descuento)
-VALUES(@id_la_rusa_loca, @id_categoria_plata, 20);
+VALUES(@id_la_rusa_loca, @id_categoria_oro, @desc_parque_las_venturas_oro);
 
+SET @desc_la_rusa_loca_oro = 50;
 INSERT INTO
 	permite_acceder(medio_id, categoria_id, descuento)
-VALUES(@id_medio_parque_las_venturas, @id_categoria_plata, 20);
+VALUES(@id_parque_las_venturas, @id_categoria_oro, @desc_la_rusa_loca_oro);
 
+SET @desc_el_argento_oro = 50;
 INSERT INTO
 	permite_acceder(medio_id, categoria_id, descuento)
-VALUES(@id_el_argento, @id_categoria_plata, 20);
+VALUES(@id_el_argento, @id_categoria_oro, @desc_el_argento_oro);
 
-INSERT INTO
+/*PARQUE ASTRONOMICUS*/
+SET @desc_parque_astronomicus_oro = 40;
+INSERT INTO -- acceso sin descuento a parque
 	permite_acceder(medio_id, categoria_id, descuento)
-VALUES(@id_la_rusa_loca, @id_categoria_oro, 50);
+VALUES(@id_parque_astronomicus, @id_categoria_oro, @desc_parque_astronomicus_oro);
 
-INSERT INTO
+SET @desc_la_jazzy_rue_oro = 50;
+INSERT INTO -- acceso con descuento a atraccion
 	permite_acceder(medio_id, categoria_id, descuento)
-VALUES(@id_medio_parque_las_venturas, @id_categoria_oro, 50);
+VALUES(@id_la_jazzy_rue, @id_categoria_oro, @desc_la_jazzy_rue_oro);
 
-INSERT INTO
+SET @desc_april_in_paris_oro = 40;
+INSERT INTO -- acceso sin descuento a atraccion
 	permite_acceder(medio_id, categoria_id, descuento)
-VALUES(@id_el_argento, @id_categoria_oro, 50);
+VALUES(@id_april_in_paris, @id_categoria_oro, @desc_april_in_paris_oro);
 
-/*CONSUMOS Y FACTURAS*/
+/*EVENTO BYPASS FEST*/
+SET @desc_bypass_fest_oro = 30;
+INSERT INTO -- acceso con descuento a evento
+	permite_acceder(medio_id, categoria_id, descuento)
+VALUES(@id_bypass_fest, @id_categoria_oro, @desc_bypass_fest_oro);
+
+/*EVENTO FIESTA BIZARRA*/
+SET @desc_fiesta_bizarra_oro = 20;
+INSERT INTO -- acceso con descuento a evento
+	permite_acceder(medio_id, categoria_id, descuento)
+VALUES(@id_fiesta_bizarra, @id_categoria_oro, @desc_fiesta_bizarra_oro);
+
+
+/*****************  FIN DESCUENTOS POR CATEGORIA  ****************/
+
+
+/******************  CONSUMOS Y FACTURAS POR CLIENTE **********************/
+
+-- NOTA: Si los consumos son del mes actual tienen el numero de factura en null,
+-- sino no porque ya se creo la factura correspondiente
+
+-- Importes con descuentos aplicados por categoria
+
+/*BRONCE*/
+SET @importe_parque_las_venturas_bronce = @precio_parque_las_venturas * (100 - @desc_parque_las_venturas_bronce);
+SET @importe_la_rusa_loca_bronce = @precio_la_rusa_loca * (100 - @desc_la_rusa_loca_bronce);
+SET @importe_el_argento_bronce = @precio_el_argento * (100 - @desc_el_argento_bronce);
+
+SET @importe_parque_astronomicus_bronce = @precio_parque_astronomicus * (100 - @desc_parque_astronomicus_bronce);
+SET @importe_la_jazzy_rue_bronce = @precio_la_jazzy_rue * (100 - @desc_la_jazzy_rue_bronce);
+SET @importe_april_in_paris_bronce = @precio_april_in_paris * (100 - @desc_april_in_paris_bronce);
+
+SET @importe_bypass_fest_bronce = @precio_bypass_fest * (100 - @desc_bypass_fest_bronce);
+SET @importe_fiesta_bizarra_bronce = @precio_fiesta_bizarra * (100 - @desc_fiesta_bizarra_bronce);
+
+/*PLATA*/
+SET @importe_parque_las_venturas_plata = @precio_parque_las_venturas * (100 - @desc_parque_las_venturas_plata);
+SET @importe_la_rusa_loca_plata = @precio_la_rusa_loca * (100 - @desc_la_rusa_loca_plata);
+SET @importe_el_argento_plata = @precio_el_argento * (100 - @desc_el_argento_plata);
+
+SET @importe_parque_astronomicus_plata = @precio_parque_astronomicus * (100 - @desc_parque_astronomicus_plata);
+SET @importe_la_jazzy_rue_plata = @precio_la_jazzy_rue * (100 - @desc_la_jazzy_rue_plata);
+SET @importe_april_in_paris_plata = @precio_april_in_paris * (100 - @desc_april_in_paris_plata);
+
+SET @importe_bypass_fest_plata = @precio_bypass_fest * (100 - @desc_bypass_fest_plata);
+SET @importe_fiesta_bizarra_plata = @precio_fiesta_bizarra * (100 - @desc_fiesta_bizarra_plata);
+
+/*ORO*/
+SET @importe_parque_las_venturas_oro = @precio_parque_las_venturas * (100 - @desc_parque_las_venturas_oro);
+SET @importe_la_rusa_loca_oro = @precio_la_rusa_loca * (100 - @desc_la_rusa_loca_oro);
+SET @importe_el_argento_oro = @precio_el_argento * (100 - @desc_el_argento_oro);
+
+SET @importe_parque_astronomicus_oro = @precio_parque_astronomicus * (100 - @desc_parque_astronomicus_oro);
+SET @importe_la_jazzy_rue_oro = @precio_la_jazzy_rue * (100 - @desc_la_jazzy_rue_oro);
+SET @importe_april_in_paris_oro = @precio_april_in_paris * (100 - @desc_april_in_paris_oro);
+
+SET @importe_bypass_fest_oro = @precio_bypass_fest * (100 - @desc_bypass_fest_oro);
+SET @importe_fiesta_bizarra_oro = @precio_fiesta_bizarra * (100 - @desc_fiesta_bizarra_oro);
+
+
+/******** CLIENTE TOMAS (FRECUENCIA ALTA) ********/
+
+/*** Enero 2018 ***/
+
+-- PAGO
 INSERT INTO
-	 consumo(numero_de_factura, numero_de_tarjeta, medio_entretenimiento_id, importe, fecha_hora)
-VALUES(NULL, @id_tarjeta_tomas, @id_la_rusa_loca, @precio_la_rusa_loca, '2018-01-05 14:43:42');
-SET @id_consumo_tomas_1 = LAST_INSERT_ID();
+	pago(fecha, cliente_id, medio_de_pago)
+VALUES(@fecha_tomas_bronce_a_oro, @id_tomas, @medio_de_pago_tomas);
+SET @id_pago_tomas_enero = LAST_INSERT_ID();
 
-INSERT INTO
-	 consumo(numero_de_factura, numero_de_tarjeta, medio_entretenimiento_id, importe, fecha_hora)
-VALUES(NULL, @id_tarjeta_tomas, @id_la_rusa_loca, @precio_la_rusa_loca, '2018-01-05 15:43:42');
-SET @id_consumo_tomas_2 = LAST_INSERT_ID();
-
-INSERT INTO
-	 consumo(numero_de_factura, numero_de_tarjeta, medio_entretenimiento_id, importe, fecha_hora)
-VALUES(NULL, @id_tarjeta_tomas, @id_el_argento, @precio_el_argento, '2018-02-03 16:49:34');
-SET @id_consumo_tomas_3 = LAST_INSERT_ID();
-
--- Todavia no tiene factura
-INSERT INTO
-	 consumo(numero_de_factura, numero_de_tarjeta, medio_entretenimiento_id, importe, fecha_hora)
-VALUES(NULL, @id_tarjeta_tomas, @id_bypass_fest, @precio_bypass_fest, '2018-05-05 02:45:09');
-SET @id_consumo_tomas_4 = LAST_INSERT_ID();
-
--- Pago de la factura de consumos tomas 1 y 2
-INSERT INTO
-	pago(fecha, cliente_id)
-VALUES('2018-02-10', @id_tomas);
-SET @id_pago_tomas_1 = LAST_INSERT_ID();
-
--- Factura consumos tomas 1 y 2
+-- FACTURA  
 INSERT INTO
 	factura(fecha_emision, fecha_vencimiento, pago_id)
-VALUES('2018-02-01', '2018-03-01', @id_pago_tomas_1);
+VALUES('2018-02-01', '2018-02-15', @id_pago_tomas_enero);
+SET @nro_factura_tomas_enero = LAST_INSERT_ID();
 
--- Factura impaga de consumo tomas 3
+-- Consumos
+-- Para subir a oro debe consumir 2000 antes del pago
+
+-- Visita parque las venturas | total = 270+45+90+45 = 450 | acumulado enero = 450
+INSERT INTO -- Ingresa a parque las venturas en bronce -> $270
+	 consumo(numero_de_factura, numero_de_tarjeta, medio_entretenimiento_id, importe, fecha_hora)
+VALUES(@nro_factura_tomas_enero, @id_tarjeta_tomas_actualmente_bloqueada, @id_parque_las_venturas, @importe_parque_las_venturas_bronce, '2018-01-01 9:01:10');
+
+INSERT INTO -- El argento en bronce -> $ 45
+	 consumo(numero_de_factura, numero_de_tarjeta, medio_entretenimiento_id, importe, fecha_hora)
+VALUES(@nro_factura_tomas_enero, @id_tarjeta_tomas_actualmente_bloqueada, @id_el_argento, @importe_el_argento_bronce, '2018-01-01 9:10:50');
+
+INSERT INTO -- La rusa loca en bronce -> $90
+	 consumo(numero_de_factura, numero_de_tarjeta, medio_entretenimiento_id, importe, fecha_hora)
+VALUES(@nro_factura_tomas_enero, @id_tarjeta_tomas_actualmente_bloqueada, @id_la_rusa_loca, @importe_la_rusa_loca_bronce, '2018-01-01 9:20:42');
+
+INSERT INTO -- El argento en bronce -> $ 45
+	 consumo(numero_de_factura, numero_de_tarjeta, medio_entretenimiento_id, importe, fecha_hora)
+VALUES(@nro_factura_tomas_enero, @id_tarjeta_tomas_actualmente_bloqueada, @id_el_argento, @importe_el_argento_bronce, '2018-01-01 9:40:50');
+
+-- Pierde la tarjeta el 15 de enero y le dan otra 
+-- Visita parque astronomicus con su nueva tarjeta  -> total = 300+150+180 = 630  -> acumulado enero = 450+630 = 1080
+
+INSERT INTO -- Ingresa a parque astronomicus en bronce -> $300 
+	 consumo(numero_de_factura, numero_de_tarjeta, medio_entretenimiento_id, importe, fecha_hora)
+VALUES(@nro_factura_tomas_enero, @id_tarjeta_tomas_actualmente_activa, @id_parque_astronomicus, @importe_parque_astronomicus_bronce, '2018-01-20 9:05:10');
+
+INSERT INTO -- Ingresa a april in paris en bronce-> $150
+	 consumo(numero_de_factura, numero_de_tarjeta, medio_entretenimiento_id, importe, fecha_hora)
+VALUES(@nro_factura_tomas_enero, @id_tarjeta_tomas_actualmente_activa, @id_april_in_paris, @importe_april_in_paris_bronce, '2018-01-20 9:10:10');
+
+INSERT INTO -- Ingresa a la jazzy rue en bronce -> $180
+	 consumo(numero_de_factura, numero_de_tarjeta, medio_entretenimiento_id, importe, fecha_hora)
+VALUES(@nro_factura_tomas_enero, @id_tarjeta_tomas_actualmente_activa, @id_la_jazzy_rue, @importe_la_jazzy_rue_bronce, '2018-01-20 10:02:10');
+
+-- Asiste a evento fiesta bizzarra en bronce total = 300 | acumulado 1080+300 = 1380
+INSERT INTO
+	 consumo(numero_de_factura, numero_de_tarjeta, medio_entretenimiento_id, importe, fecha_hora)
+VALUES(@nro_factura_tomas_enero, @id_tarjeta_tomas_actualmente_activa, @id_fiesta_bizarra, @importe_fiesta_bizarra_bronce, '2018-01-25 11:02:10');
+
+-- Visita de nuevo parque astronomicus  -> total = 300+150+180 = 630  -> acumulado enero = 1380+630 = 2010
+
+INSERT INTO -- Ingresa a parque astronomicus en bronce -> $300 
+	 consumo(numero_de_factura, numero_de_tarjeta, medio_entretenimiento_id, importe, fecha_hora)
+VALUES(@nro_factura_tomas_enero, @id_tarjeta_tomas_actualmente_activa, @id_parque_astronomicus, @importe_parque_astronomicus_bronce, '2018-01-27 9:05:10');
+
+INSERT INTO -- Ingresa a april in paris en bronce-> $150
+	 consumo(numero_de_factura, numero_de_tarjeta, medio_entretenimiento_id, importe, fecha_hora)
+VALUES(@nro_factura_tomas_enero, @id_tarjeta_tomas_actualmente_activa, @id_april_in_paris, @importe_april_in_paris_bronce, '2018-01-27 9:10:10');
+
+INSERT INTO -- Ingresa a la jazzy rue en bronce-> $180
+	 consumo(numero_de_factura, numero_de_tarjeta, medio_entretenimiento_id, importe, fecha_hora)
+VALUES(@nro_factura_tomas_enero, @id_tarjeta_tomas_actualmente_activa, @id_la_jazzy_rue, @importe_la_jazzy_rue_bronce, '2018-01-27 10:02:10');
+
+/**** FIN ENERO 2018 ***/
+
+/*** FEBRERO 2018 ***/
+
+-- PAGO
+INSERT INTO
+	pago(fecha, cliente_id, medio_de_pago)
+VALUES('2018-03-10', @id_tomas, @medio_de_pago_tomas);
+SET @id_pago_tomas_febrero = LAST_INSERT_ID();
+
+-- FACTURA  
 INSERT INTO
 	factura(fecha_emision, fecha_vencimiento, pago_id)
-VALUES('2018-03-01', '2018-04-01', NULL)
+VALUES('2018-03-01', '2018-03-15', @id_pago_tomas_febrero);
+SET @nro_factura_tomas_febrero = LAST_INSERT_ID();
+
+-- CONSUMOS
+
+INSERT INTO -- Asiste a Bypass fest en oro -> $210  | acumulado de febrero = 210
+	 consumo(numero_de_factura, numero_de_tarjeta, medio_entretenimiento_id, importe, fecha_hora)
+VALUES(@nro_factura_tomas_febrero, @id_tarjeta_tomas_actualmente_activa, @id_bypass_fest, @importe_bypass_fest_oro, '2018-02-15 02:45:09');
+
+-- Visita parque las venturas | total = 150+25+50+25 = 250 | acumulado febrero = 250 + 210 = 460
+INSERT INTO -- Ingresa a parque las venturas en oro -> $150
+	 consumo(numero_de_factura, numero_de_tarjeta, medio_entretenimiento_id, importe, fecha_hora)
+VALUES(@nro_factura_tomas_febrero, @id_tarjeta_tomas_actualmente_activa, @id_parque_las_venturas, @importe_parque_las_venturas_oro, '2018-02-17 9:01:10');
+
+INSERT INTO -- El argento en oro -> $ 25
+	 consumo(numero_de_factura, numero_de_tarjeta, medio_entretenimiento_id, importe, fecha_hora)
+VALUES(@nro_factura_tomas_febrero, @id_tarjeta_tomas_actualmente_activa, @id_el_argento, @importe_el_argento_oro, '2018-02-17 10:10:50');
+
+INSERT INTO -- La rusa loca en oro -> $50
+	 consumo(numero_de_factura, numero_de_tarjeta, medio_entretenimiento_id, importe, fecha_hora)
+VALUES(@nro_factura_tomas_febrero, @id_tarjeta_tomas_actualmente_activa, @id_la_rusa_loca, @importe_la_rusa_loca_oro, '2018-02-17 10:20:42');
+
+INSERT INTO -- El argento en oro -> $ 25
+	 consumo(numero_de_factura, numero_de_tarjeta, medio_entretenimiento_id, importe, fecha_hora)
+VALUES(@nro_factura_tomas_febrero, @id_tarjeta_tomas_actualmente_activa, @id_el_argento, @importe_el_argento_oro, '2018-02-17 11:40:50');
+
+/*** FIN FEBRERO 2018***/
+
+
+
+/******** CLIENTE JACINTO (FRECUENCIA MEDIA) ********/
+
+/*** Enero 2018 ***/
+
+-- PAGO
+
+INSERT INTO
+	pago(fecha, cliente_id, medio_de_pago)
+VALUES(@fecha_jacinto_bronce_a_plata, @id_jacinto, @medio_de_pago_jacinto);
+SET @id_pago_jacinto_enero = LAST_INSERT_ID();
+
+-- FACTURA  
+INSERT INTO
+	factura(fecha_emision, fecha_vencimiento, pago_id)
+VALUES('2018-02-01', '2018-02-15', @id_pago_jacinto_enero);
+SET @nro_factura_jacinto_enero = LAST_INSERT_ID();
+
+-- Consumos
+-- Para subir a plata debe consumir 500 antes del pago
+
+-- Visita parque astronomicus -> total = 300+150+180 = 630  
+INSERT INTO -- Ingresa a parque astronomicus en bronce -> $300 
+	 consumo(numero_de_factura, numero_de_tarjeta, medio_entretenimiento_id, importe, fecha_hora)
+VALUES(@nro_factura_jacinto_enero, @id_tarjeta_jacinto, @id_parque_astronomicus, @importe_parque_astronomicus_bronce, '2018-01-14 12:05:10');
+
+INSERT INTO -- Ingresa a april in paris en bronce-> $150
+	 consumo(numero_de_factura, numero_de_tarjeta, medio_entretenimiento_id, importe, fecha_hora)
+VALUES(@nro_factura_jacinto_enero, @id_tarjeta_jacinto, @id_april_in_paris, @importe_april_in_paris_bronce, '2018-01-14 12:10:10');
+
+INSERT INTO -- Ingresa a la jazzy rue en bronce -> $180
+	 consumo(numero_de_factura, numero_de_tarjeta, medio_entretenimiento_id, importe, fecha_hora)
+VALUES(@nro_factura_jacinto_enero, @id_tarjeta_jacinto, @id_la_jazzy_rue, @importe_la_jazzy_rue_bronce, '2018-01-14 14:02:10');
+
+-- Asiste a evento fiesta bizzarra en bronce total = 300 | acumulado 630+300 = 930
+INSERT INTO
+	 consumo(numero_de_factura, numero_de_tarjeta, medio_entretenimiento_id, importe, fecha_hora)
+VALUES(@nro_factura_jacinto_enero, @id_tarjeta_jacinto, @id_fiesta_bizarra, @importe_fiesta_bizarra_bronce, '2018-01-25 13:02:10');
+
+
+/**** FIN ENERO 2018 ***/
+
+/*** FEBRERO 2018 ***/
+
+-- PAGO
+INSERT INTO
+	pago(fecha, cliente_id, medio_de_pago)
+VALUES('2018-03-10', @id_jacinto, @medio_de_pago_jacinto);
+SET @id_pago_jacinto_febrero = LAST_INSERT_ID();
+
+-- FACTURA  
+INSERT INTO
+	factura(fecha_emision, fecha_vencimiento, pago_id)
+VALUES('2018-03-01', '2018-03-15', @id_pago_jacinto_febrero);
+SET @nro_factura_jacinto_febrero = LAST_INSERT_ID();
+
+-- CONSUMOS
+
+INSERT INTO -- Asiste a Bypass fest en plata -> $240 | acumulado de febrero = 240
+	 consumo(numero_de_factura, numero_de_tarjeta, medio_entretenimiento_id, importe, fecha_hora)
+VALUES(@nro_factura_jacinto_febrero, @id_tarjeta_jacinto, @id_bypass_fest, @importe_bypass_fest_plata, '2018-02-15 02:30:09');
+
+-- Visita parque las venturas | total = 240+80+80 = 400 | acumulado febrero = 240 + 400 = 640
+INSERT INTO -- Ingresa a parque las venturas en plata -> $240
+	 consumo(numero_de_factura, numero_de_tarjeta, medio_entretenimiento_id, importe, fecha_hora)
+VALUES(@nro_factura_jacinto_febrero, @id_tarjeta_jacinto, @id_parque_las_venturas, @importe_parque_las_venturas_plata, '2018-02-20 9:31:10');
+
+INSERT INTO -- La rusa loca en plata -> $80
+	 consumo(numero_de_factura, numero_de_tarjeta, medio_entretenimiento_id, importe, fecha_hora)
+VALUES(@nro_factura_jacinto_febrero, @id_tarjeta_jacinto, @id_la_rusa_loca, @importe_la_rusa_loca_oro, '2018-02-20 10:20:42');
+
+INSERT INTO -- La rusa loca en plata -> $80
+	 consumo(numero_de_factura, numero_de_tarjeta, medio_entretenimiento_id, importe, fecha_hora)
+VALUES(@nro_factura_jacinto_febrero, @id_tarjeta_jacinto, @id_la_rusa_loca, @importe_la_rusa_loca_oro, '2018-02-20 10:42:42');
+
+
+/*** FIN FEBRERO 2018***/
+
+
+
+/******** CLIENTE CARMICHAEL (FRECUENCIA BAJA) ********/
+
+/*** Enero 2018 ***/
+
+-- PAGO
+
+INSERT INTO
+	pago(fecha, cliente_id, medio_de_pago)
+VALUES('2018-02-12', @id_carmichael, @medio_de_pago_carmichael);
+SET @id_pago_carmichael_enero = LAST_INSERT_ID();
+
+-- FACTURA  
+INSERT INTO
+	factura(fecha_emision, fecha_vencimiento, pago_id)
+VALUES('2018-02-01', '2018-02-15', @id_pago_carmichael_enero);
+SET @nro_factura_carmichael_enero = LAST_INSERT_ID();
+
+-- Consumos
+-- Para no subir a plata debe consumir menos de 500 antes del pago
+
+-- Visita parque astronomicus -> total = 300+150 = 450  
+INSERT INTO -- Ingresa a parque astronomicus en bronce -> $300 
+	 consumo(numero_de_factura, numero_de_tarjeta, medio_entretenimiento_id, importe, fecha_hora)
+VALUES(@nro_factura_carmichael_enero, @id_tarjeta_carmichael, @id_parque_astronomicus, @importe_parque_astronomicus_bronce, '2018-01-19 12:05:10');
+
+INSERT INTO -- Ingresa a april in paris en bronce-> $150
+	 consumo(numero_de_factura, numero_de_tarjeta, medio_entretenimiento_id, importe, fecha_hora)
+VALUES(@nro_factura_carmichael_enero, @id_tarjeta_carmichael, @id_april_in_paris, @importe_april_in_paris_bronce, '2018-01-19 12:10:10');
+
+/**** FIN ENERO 2018 ***/
+
+/*** FEBRERO 2018 ***/
+
+-- FACTURA IMPAGA 
+INSERT INTO
+	factura(fecha_emision, fecha_vencimiento, pago_id)
+VALUES('2018-03-01', '2018-03-15', @id_pago_carmichael_febrero);
+SET @nro_factura_carmichael_febrero = LAST_INSERT_ID();
+
+-- CONSUMOS
+
+INSERT INTO -- Asiste a Bypass fest en bronce -> $290 | acumulado de febrero = 290
+	 consumo(numero_de_factura, numero_de_tarjeta, medio_entretenimiento_id, importe, fecha_hora)
+VALUES(@nro_factura_carmichael_febrero, @id_tarjeta_carmichael, @id_bypass_fest, @importe_bypass_fest_plata, '2018-02-15 02:35:09');
+
+
+/*** FIN FEBRERO 2018***/
+
+
 
 
 /*  */ 

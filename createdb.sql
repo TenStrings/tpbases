@@ -19,21 +19,24 @@ CREATE TABLE cliente (
     cliente_id integer unsigned AUTO_INCREMENT,
     nombre varchar(45) NOT NULL,
     apellido varchar(45) NOT NULL,
-    medio_de_pago integer NOT NULL,
+    medio_de_pago varchar(10) NOT NULL,
     ubicacion_facturacion integer unsigned, 
     ubicacion_residencia integer unsigned,
     numero_de_documento integer unsigned,
     PRIMARY KEY (cliente_id),
     FOREIGN KEY (ubicacion_facturacion) REFERENCES ubicacion(ubicacion_id),
-    FOREIGN KEY (ubicacion_residencia) REFERENCES ubicacion(ubicacion_id)
+    FOREIGN KEY (ubicacion_residencia) REFERENCES ubicacion(ubicacion_id),
+	CHECK (medio_de_pago in ('VISA', 'AMEX', 'MASTERCARD'))
 );
 
 CREATE TABLE pago (
     pago_id integer unsigned NOT NULL AUTO_INCREMENT,
     fecha date NOT NULL,
     cliente_id integer unsigned NOT NULL,
+    medio_de_pago varchar(10) NOT NULL,
     PRIMARY KEY (pago_id),
-    FOREIGN KEY (cliente_id) REFERENCES cliente(cliente_id)
+    FOREIGN KEY (cliente_id) REFERENCES cliente(cliente_id),
+    CHECK (medio_de_pago in ('VISA', 'AMEX', 'MASTERCARD'))
 );
 
 CREATE TABLE tarjeta (
@@ -61,10 +64,11 @@ CREATE TABLE telefono (
 
 CREATE TABLE categoria (
     categoria_id integer unsigned AUTO_INCREMENT, 
-    nombre varchar(30),
-    monto_subida decimal(10,2),
-    monto_permanencia decimal(10,2),
-    PRIMARY KEY (categoria_id)
+    nombre varchar(10) NOT NULL,
+    monto_subida decimal(10,2) NOT NULL,
+    monto_permanencia decimal(10,2) NOT NULL,
+    PRIMARY KEY (categoria_id),
+    CHECK (nombre in ('BRONCE', 'PLATA', 'ORO'))
 );
 
 CREATE TABLE cambia_su (
@@ -78,9 +82,9 @@ CREATE TABLE cambia_su (
 
 CREATE TABLE medio_entretenimiento (
     medio_id integer unsigned NOT NULL AUTO_INCREMENT,
-    precio decimal (5, 2) unsigned,
-    nombre varchar(50),
-    tipo varchar(10),
+    precio decimal (5, 2) unsigned NOT NULL,
+    nombre varchar(50) NOT NULL,
+    tipo varchar(10) NOT NULL,
     PRIMARY KEY (medio_id),
     CHECK (tipo in ('PARQUE', 'ATRACCION', 'EVENTO'))
 );
@@ -109,23 +113,23 @@ CREATE TABLE parque (
 CREATE TABLE atraccion (
     atraccion_id integer unsigned,
     parque_id integer unsigned,
-    edad_desde smallint unsigned,
-    edad_hasta smallint unsigned,
-    altura_min smallint unsigned, -- En centimetros
+    edad_desde smallint unsigned NOT NULL,
+    edad_hasta smallint unsigned NOT NULL,
+    altura_min varchar(6) NOT NULL, -- CONVENCIÓN MEDIDA EN 'XX cm'
     PRIMARY KEY(atraccion_id),
     FOREIGN KEY (atraccion_id) REFERENCES medio_entretenimiento(medio_id),
     FOREIGN KEY (parque_id) REFERENCES parque(parque_id)
 );
 
 CREATE TABLE empresa_organizadora (
-    cuit integer unsigned,
-    razon_social integer unsigned,
+    cuit varchar(13),
+    razon_social varchar(40) NOT NULL,
     PRIMARY KEY (cuit)
 );
 
 CREATE TABLE evento (
     evento_id integer unsigned,
-    cuit_organizadora integer unsigned NOT NULL,
+    cuit_organizadora varchar(13) NOT NULL,
     ubicacion_id integer unsigned,
     horario_desde datetime NOT NULL,
     horario_hasta datetime NOT NULL,
