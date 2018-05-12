@@ -8,16 +8,97 @@ USE tpbases;
 
 SET @fecha_inicio_programa = '2018-01-01';
 
-/*************  CLIENTES  **************/  
+/***********  UBICACIONES  *****************/
 
--- NOTA: DESPUES HAY QUE CREAR UBICACION PARA TODOS, DICE QUE LA QUERES GUARDAR Y NO DEBERIA SER NULL
+/*** De Clientes ****/
+
+/*Tomas ubicacion facturacion*/
+INSERT INTO 
+	ubicacion (pais, provincia, localidad, codigo_postal, calle, altura, piso, departamento)
+VALUES ('Argentina', 'Buenos Aires', 'Olivos', '1636', 'Carlos Villate', 2132, NULL, NULL);
+SET @id_ubicacion_facturacion_tomas = LAST_INSERT_ID();
+/*Tomas ubicacion residencia*/
+SET @id_ubicacion_residencia_tomas = @id_ubicacion_facturacion_tomas;
+
+/*Jacinto ubicacion facturacion*/
+INSERT INTO 
+	ubicacion (pais, provincia, localidad, codigo_postal, calle, altura, piso, departamento)
+VALUES ('Argentina', 'Buenos Aires', 'Florida', '1615', 'Gral. Roca', 2004, NULL, NULL);
+SET @id_ubicacion_facturacion_jacinto = LAST_INSERT_ID();
+/*Jacinto ubicacion residencia*/
+SET @id_ubicacion_residencia_jacinto = @id_ubicacion_facturacion_jacinto;
+
+/*Carmichael ubicacion facturacion*/
+INSERT INTO 
+	ubicacion (pais, provincia, localidad, codigo_postal, calle, altura, piso, departamento)
+VALUES ('Italia', 'Roma', 'Roma', 'RA12', 'Piano', 129, 2, 'B');
+SET @id_ubicacion_facturacion_carmichael = LAST_INSERT_ID();
+/*Carmichael ubicacion residencia*/
+INSERT INTO 
+	ubicacion (pais, provincia, localidad, codigo_postal, calle, altura, piso, departamento)
+VALUES ('Italia', 'Roma', 'Roma', 'RA12', 'Piero', 150, NULL, NULL);
+SET @id_ubicacion_residencia_carmichael = LAST_INSERT_ID();
+
+/*Michael ubicacion facturacion*/
+INSERT INTO 
+	ubicacion (pais, provincia, localidad, codigo_postal, calle, altura, piso, departamento)
+VALUES ('Alemania', 'Berlín', 'Berlín', 'BE10', 'Strujenbajen', 332, 1, 'A');
+SET @id_ubicacion_facturacion_michael = LAST_INSERT_ID();
+/*Michael ubicacion residencia*/
+INSERT INTO 
+	ubicacion (pais, provincia, localidad, codigo_postal, calle, altura, piso, departamento)
+VALUES ('Alemania', 'Berlín', 'Berlín', 'BE10', 'Livedij', 402, 4, 'C');
+SET @id_ubicacion_residencia_michael = LAST_INSERT_ID();
+
+/*De medios de entretenimiento*/
+
+/*Parque las venturas*/
+INSERT INTO 
+	ubicacion (pais, provincia, localidad, codigo_postal, calle, altura, piso, departamento)
+VALUES ('Argentina', 'Mendoza', 'Mendoza', '95FF', 'Rivadavia', 544, NULL, NULL);
+SET @id_ubicacion_parque_las_venturas = LAST_INSERT_ID();
+
+/*Parque astronomicus*/
+INSERT INTO 
+ubicacion (pais, provincia, localidad, codigo_postal, calle, altura, piso, departamento)
+VALUES ('Francia', 'París', 'París', '2323XXRT', 'Jean Jaures', 144, NULL, NULL);
+SET @id_ubicacion_parque_astronomicus = LAST_INSERT_ID();
+
+/*Organizadora de Bypass fest */
+INSERT INTO
+	ubicacion(pais, provincia, localidad, codigo_postal, calle, altura, piso, departamento)
+VALUES('Argentina', 'Buenos Aires', 'Vicente López', 1012, 'Av. libertador', 1225, 3, NULL);
+SET @id_ubicacion_empresa_org_cara = LAST_INSERT_ID();
+
+/*Bypass fest */
+INSERT INTO
+	ubicacion(pais, provincia, localidad, codigo_postal, calle, altura, piso, departamento)
+VALUES('Argentina', 'Rio Negro', 'Bariloche', 2410, 'Catedral', 184, NULL, NULL);
+SET @id_ubicacion_evento_bypass_fest = LAST_INSERT_ID();
+
+/*Organizadora de Fiesta Bizarra */
+INSERT INTO
+	ubicacion(pais, provincia, localidad, codigo_postal, calle, altura, piso, departamento)
+VALUES('Chile', 'Villarica', 'Villarica', 101, 'Lanín', 1003, NULL, NULL);
+SET @id_ubicacion_empresa_org_barata = LAST_INSERT_ID();
+
+/*Fiesta Bizarra*/
+INSERT INTO
+	ubicacion(pais, provincia, localidad, codigo_postal, calle, altura, piso, departamento)
+VALUES('Argentina', 'La Pampa', 'Mitre', 1021, 'Combate de los pozos', 158, NULL, NULL);
+SET @id_ubicacion_evento_fiesta_bizarra = LAST_INSERT_ID();
+
+/****************  FIN UBICACIONES  *******************/
+
+
+/*************  CLIENTES  **************/  
 
 SET @medio_de_pago_tomas ='VISA';
 INSERT INTO -- CONSUMIDOR FRECUENTE CATEGORIA GOLD 
     cliente(nombre, apellido, medio_de_pago, ubicacion_facturacion, 
             ubicacion_residencia,
             numero_de_documento)
-VALUES ('Tomás', 'Pastore', @medio_de_pago_tomas, NULL, NULL, 39560320);
+VALUES ('Tomás', 'Pastore', @medio_de_pago_tomas, @id_ubicacion_facturacion_tomas, @id_ubicacion_residencia_tomas, 39560320);
 SET @id_tomas = LAST_INSERT_ID();
 
 SET @medio_de_pago_jacinto ='AMEX';
@@ -25,7 +106,7 @@ INSERT INTO -- CONSUMIDOR MEDIO CATEGORIA PLATA
     cliente(nombre, apellido, medio_de_pago, ubicacion_facturacion, 
             ubicacion_residencia,
             numero_de_documento)
-VALUES ('Jacinto', 'Populea',@medio_de_pago_jacinto, NULL, NULL, 40000000);
+VALUES ('Jacinto', 'Populea',@medio_de_pago_jacinto, @id_ubicacion_facturacion_jacinto, @id_ubicacion_residencia_jacinto, 40000000);
 SET @id_jacinto = LAST_INSERT_ID();
 
 SET @medio_de_pago_carmichael = 'MASTERCARD';
@@ -33,7 +114,7 @@ INSERT INTO -- CONSUMIDOR BAJO CATEGORIA BRONCE
     cliente(nombre, apellido, medio_de_pago, ubicacion_facturacion, 
             ubicacion_residencia,
             numero_de_documento)
-VALUES ('Carmichael', 'Buonavita',@medio_de_pago_carmichael, NULL, NULL, 40000001);
+VALUES ('Carmichael', 'Buonavita',@medio_de_pago_carmichael, @id_ubicacion_facturacion_carmichael, @id_ubicacion_residencia_carmichael, 40000001);
 SET @id_carmichael = LAST_INSERT_ID();
 
 SET @medio_de_pago_michael = 'MASTERCARD';
@@ -41,7 +122,7 @@ INSERT INTO -- CLIENTE RATA (NUNCA CONSUMIO)
     cliente(nombre, apellido, medio_de_pago, ubicacion_facturacion, 
             ubicacion_residencia,
             numero_de_documento)
-VALUES ('Michael', 'Corleone', @medio_de_pago_michael, NULL, NULL, 40000002);
+VALUES ('Michael', 'Corleone', @medio_de_pago_michael, @id_ubicacion_facturacion_michael, @id_ubicacion_residencia_michael, 40000002);
 SET @id_michael = LAST_INSERT_ID();
 
 /*************  FIN CLIENTES  **************/
@@ -148,14 +229,8 @@ VALUES(@fecha_inicio_programa, @id_tarjeta_michael, @id_categoria_bronce);
 /*********** Parques ************/
 
 /*Parque Las Venturas*/
-
 /* Lista de atracciones -> [la_rusa_loca, el_argento] */
 
-/*Ubicación*/
-INSERT INTO 
-	ubicacion (pais, provincia, localidad, codigo_postal, calle, altura, piso, departamento)
-VALUES ('Argentina', 'Mendoza', 'Mendoza', '95FF', 'Rivadavia', 544, NULL, NULL);
-SET @id_ubicacion_parque_las_venturas = LAST_INSERT_ID();
 /*Medio de entretenimiento*/
 SET @precio_parque_las_venturas = 300;
 INSERT INTO
@@ -190,11 +265,6 @@ VALUES(@id_el_argento, @id_parque_las_venturas, 2, 85,'50 cm');
 
 /* Lista de atracciones -> [la_jazzy_rue, april_in_paris] */
 
-/*Ubicación*/
-INSERT INTO 
-ubicacion (pais, provincia, localidad, codigo_postal, calle, altura, piso, departamento)
-VALUES ('Francia', NULL, 'París', '2323XXRT', 'Jean Jaures', 144, NULL, NULL);
-SET @id_ubicacion_parque_astronomicus = LAST_INSERT_ID();
 /*Medio de entretenimiento*/
 SET @precio_parque_astronomicus = 300;
 INSERT INTO medio_entretenimiento (precio, nombre, tipo)
@@ -228,16 +298,10 @@ VALUES(@id_april_in_paris, @id_parque_astronomicus, 0, 99, '0 cm');
 /* BYPASS FEST */
 
 /* Empresa organizadora*/
-SET @cuit_empresa_cara = '30-71004052-0'; -- poner uno posta
+SET @cuit_empresa_cara = '30-71004052-0';
 INSERT INTO 
-	empresa_organizadora(cuit, razon_social)
-VALUES(@cuit_empresa_cara,'STARBUCKS COFFE ARGENTINA S.R.L.');
-
-/* Ubicacion */
-INSERT INTO
-	ubicacion(pais, provincia, localidad, codigo_postal, calle, altura, piso, departamento)
-VALUES('Argentina', 'Rio Negro', 'Bariloche', 2410, 'Catedral', 184, NULL, NULL);
-SET @id_ubicacion_evento_bypass_fest = LAST_INSERT_ID();
+	empresa_organizadora(cuit, razon_social, ubicacion_id)
+VALUES(@cuit_empresa_cara,'STARBUCKS COFFE ARGENTINA S.R.L.', @id_ubicacion_empresa_org_cara);
 
 /*EVENTO*/
 SET @precio_bypass_fest = 300;
@@ -254,16 +318,10 @@ VALUES(@id_bypass_fest, @cuit_empresa_cara, @id_ubicacion_evento_bypass_fest, '2
 /* FIESTA BIZARRA */
 
 /*Empresa organizadora*/
-SET @cuit_empresa_barata = '30-71004032-3'; -- poner uno posta
+SET @cuit_empresa_barata = '30-71004032-3';
 INSERT INTO 
-	empresa_organizadora(cuit, razon_social)
-VALUES(@cuit_empresa_barata, 'ANONIMUS S.A.');
-
-/*Ubicacion*/
-INSERT INTO
-	ubicacion(pais, provincia, localidad, codigo_postal, calle, altura, piso, departamento)
-VALUES('Argentina', 'Buenos Aires', 'CABA', 5842, 'Combate de los pozos', 58, 4, 'B');
-SET @id_ubicacion_evento_fiesta_bizarra = LAST_INSERT_ID();
+	empresa_organizadora(cuit, razon_social, ubicacion_id)
+VALUES(@cuit_empresa_barata, 'ANONIMUS S.A.', @id_ubicacion_empresa_org_barata);
 
 SET @precio_fiesta_bizarra = 200;
 INSERT INTO 
@@ -424,10 +482,11 @@ VALUES(@id_fiesta_bizarra, @id_categoria_oro, @desc_fiesta_bizarra_oro);
 /*****************  FIN DESCUENTOS POR CATEGORIA  ****************/
 
 
-/******************  CONSUMOS Y FACTURAS POR CLIENTE **********************/
+/******************  PAGOS, FACTURAS Y CONSUMOS POR CLIENTE **********************/
 
--- NOTA: Si los consumos son del mes actual tienen el numero de factura en null,
--- sino no porque ya se creo la factura correspondiente
+-- Recordatorios: 
+-- Un consumo tiene su numero de factura en null sii es del mes actual.
+-- Una factura tiene id_pago en null sii está impaga.
 
 -- Importes con descuentos aplicados por categoria
 
