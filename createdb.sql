@@ -34,8 +34,10 @@ CREATE TABLE cliente (
 );
 
 CREATE TABLE telefono (
+	cliente_id integer unsigned NOT NULL,
     numero integer unsigned,
-    PRIMARY KEY (numero)
+    PRIMARY KEY (cliente_id, numero),
+    FOREIGN KEY (cliente_id) REFERENCES cliente(cliente_id)
 );
 
 /**********  Tarjetas y Categorias  ************/
