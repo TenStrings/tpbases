@@ -6,9 +6,12 @@ USE tpbases;
 -- Hay 3 categorias BRONCE, PLATA Y ORO. 
 -- Los descuentos de categorias superiores son mejores o iguales
 
+
+/*Variables utiles*/
+
 SET @fecha_inicio_programa = '2018-01-01';
 
-/***********  UBICACIONES  *****************/
+/************  UBICACIONES  *****************/
 
 /*** De Clientes ****/
 
@@ -336,7 +339,6 @@ VALUES(@id_fiesta_bizarra, @cuit_empresa_barata, @id_ubicacion_evento_fiesta_biz
 
 /***************************** FIN MEDIOS DE ENTRETENIMIENTO ************************/
 
-
 /*********  DESCUENTOS POR CATEGORIA (PERMITE ACCEDER)  **********/
 -- VER QUE ONDA LOS DESCUENTOS DE LOS EVENTOS, NO DEBERIAN ESTAR ATADOS A LA VIGENCIA DEL EVENTO DE ALGUNA FORMA?
 
@@ -480,7 +482,6 @@ VALUES(@id_fiesta_bizarra, @id_categoria_oro, @desc_fiesta_bizarra_oro);
 
 
 /*****************  FIN DESCUENTOS POR CATEGORIA  ****************/
-
 
 /******************  PAGOS, FACTURAS Y CONSUMOS POR CLIENTE **********************/
 
@@ -766,8 +767,6 @@ VALUES(@nro_factura_carmichael_febrero, @id_tarjeta_carmichael, @id_bypass_fest,
 
 
 /*** FIN FEBRERO 2018***/
-
-
 
 
 /*  */ 
