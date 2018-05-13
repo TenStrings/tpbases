@@ -1,3 +1,4 @@
+/*No correr el populatedb, estos son datos frescos xD*/
 use tpbases;
 
 SET @inicio = '2018-01-01';
