@@ -73,16 +73,13 @@ CREATE PROCEDURE update_categories ()
 BEGIN
         INSERT INTO cambia_su
         SELECT  getDate() as fecha,
-                t.numero_de_tarjeta as tarjeta,
+                numero_de_tarjeta as tarjeta,
                 new_category(r.categoria_id, r.promedio, r.total, r.fecha) as new
         FROM
-            (select c.cliente_id, c.categoria_id, c.fecha, IFNULL(r.promedio, 0) as promedio, IFNULL(r.total, 0) as total from 
+            (select c.cliente_id, c.categoria_id, c.fecha, IFNULL(r.promedio, 0) as promedio,
+                    IFNULL(r.total, 0) as total, c.numero_de_tarjeta from 
             categoriasActuales c
-            LEFT OUTER JOIN resumenConsumos r ON c.cliente_id = r.cliente_id) r,
-            tarjeta t
-        WHERE
-            NOT t.bloqueada AND
-            t.cliente_id = r.cliente_id
+            LEFT OUTER JOIN resumenConsumos r ON c.cliente_id = r.cliente_id) r
         HAVING new IS NOT NULL;
 END//
 
