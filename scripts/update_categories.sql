@@ -1,12 +1,3 @@
-delimiter //
-DROP FUNCTION IF EXISTS getDate//
-CREATE FUNCTION getDate()
-RETURNS date
-DETERMINISTIC
-BEGIN RETURN(curdate());
-END//
-delimiter ;
-
 CREATE OR REPLACE VIEW categoriasActuales AS
     SELECT c.cliente_id, cs.categoria_id, t.numero_de_tarjeta, cs.fecha 
          FROM cambia_su cs, cliente c, tarjeta t
@@ -29,7 +20,6 @@ WHERE
     c.cliente_id = ca.cliente_id AND
     co.numero_de_factura = f.numero_de_factura AND
     f.pago_id = p.pago_id AND
-    p.fecha > getDate() - interval '365' day AND
     p.fecha > ca.fecha
 GROUP BY c.cliente_id;
 
@@ -37,7 +27,8 @@ delimiter //
 
 DROP FUNCTION IF EXISTS tpbases.new_category//
 CREATE FUNCTION new_category(actual integer unsigned,
-     promedio decimal(10,2), total decimal(10,2), ultimo_cambio date)
+     promedio decimal(10,2), total decimal(10,2),
+     ultimo_cambio date, fecha_actual date)
 RETURNS INTEGER UNSIGNED
 DETERMINISTIC
 BEGIN
@@ -52,10 +43,13 @@ BEGIN
     
     IF total > actual_monto_subida THEN 
         SELECT categoria_id INTO new 
-        FROM categoria WHERE categoria.monto_subida <= promedio
+        FROM categoria WHERE categoria.monto_subida <= total
         ORDER BY categoria.monto_subida DESC
         LIMIT 1;
-    ELSEIF getDate() > ultimo_cambio + interval '365' day THEN
+        IF new = actual THEN
+            RETURN (NULL);
+        END IF;
+    ELSEIF fecha_actual > ultimo_cambio + interval '365' day THEN
         IF promedio < actual_monto_permanencia THEN
             SELECT categoria_id INTO new
             FROM categoria
@@ -69,17 +63,17 @@ BEGIN
 END//
 
 DROP PROCEDURE IF EXISTS update_categories//
-CREATE PROCEDURE update_categories ()
+CREATE PROCEDURE update_categories (IN fecha_actual date)
 BEGIN
         INSERT INTO cambia_su
-        SELECT  getDate() as fecha,
+        SELECT  fecha_actual,
                 numero_de_tarjeta as tarjeta,
-                new_category(r.categoria_id, r.promedio, r.total, r.fecha) as new
+                new_category(categoria_id, promedio, total, fecha, fecha_actual) as new
         FROM
             (select c.cliente_id, c.categoria_id, c.fecha, IFNULL(r.promedio, 0) as promedio,
                     IFNULL(r.total, 0) as total, c.numero_de_tarjeta from 
             categoriasActuales c
-            LEFT OUTER JOIN resumenConsumos r ON c.cliente_id = r.cliente_id) r
+            LEFT OUTER JOIN resumenConsumos r ON c.cliente_id = r.cliente_id) t 
         HAVING new IS NOT NULL;
 END//
 

@@ -72,16 +72,7 @@ VALUES(@factura1, @tarjeta_foobar, @id_evento_plata, 501, '2018-01-01 12:05:10')
 SELECT 'Deberia ser 1:' as m, c.categoria_id, c.fecha from categoriasActuales c 
 WHERE c.cliente_id = @foobar;
 
-DELIMITER // 
-DROP FUNCTION IF EXISTS getDate//
-CREATE FUNCTION getDate()
-RETURNS date
-DETERMINISTIC
-BEGIN RETURN(@inicio + interval '2' day);
-END//
-DELIMITER ;
-
-CALL update_categories();
+CALL update_categories(@inicio + interval '2' day);
 
 SELECT 'Deberia ser 2:' as m, c.categoria_id, c.fecha from categoriasActuales c 
 WHERE c.cliente_id = @foobar;
@@ -102,58 +93,12 @@ INSERT INTO
 	 consumo(numero_de_factura, numero_de_tarjeta, medio_entretenimiento_id, importe, fecha_hora)
 VALUES(@factura2, @tarjeta_foobar, @id_evento_plata, 3501, '2018-02-01 12:05:10');
 
-DELIMITER // 
-DROP FUNCTION IF EXISTS getDate//
-CREATE FUNCTION getDate()
-RETURNS date
-DETERMINISTIC
-BEGIN RETURN(@inicio + interval '41' day);
-END//
-DELIMITER ;
-
-CALL update_categories();
+CALL update_categories(@inicio + interval '41' day);
 
 SELECT 'Deberia ser 3:' as m, c.categoria_id, c.fecha from categoriasActuales c 
 WHERE c.cliente_id = @foobar;
 
-DELIMITER // 
-DROP FUNCTION IF EXISTS getDate//
-CREATE FUNCTION getDate()
-RETURNS date
-DETERMINISTIC
-BEGIN RETURN(@inicio + interval '41' day + interval '366' day);
-END//
-DELIMITER ;
-
-/*INSERT INTO
-	pago(fecha, cliente_id, medio_de_pago)
-VALUES(@inicio + interval '140' day, @foobar, 'VISA');
-SET @id_pago2 = LAST_INSERT_ID();
-
--- FACTURA  
-INSERT INTO
-	factura(fecha_emision, fecha_vencimiento, pago_id)
-VALUES(@inicio + interval '139' day, @inicio + interval '150' day , @id_pago2);
-SET @factura2 = LAST_INSERT_ID();
-
--- CONSUMO
-INSERT INTO
-	 consumo(numero_de_factura, numero_de_tarjeta, medio_entretenimiento_id, importe, fecha_hora)
-VALUES(@factura2, @tarjeta_foobar, @id_evento_plata, 1, '2018-04-01 12:05:10');
-*/
-/*        SELECT  getDate() as fecha,
-                t.numero_de_tarjeta as tarjeta,
-                new_category(r.categoria_id, r.promedio, r.total, r.fecha) as new
-        FROM
-            (select c.cliente_id, c.categoria_id, c.fecha, IFNULL(r.promedio, 0) as promedio, IFNULL(r.total, 0) as total from 
-            categoriasActuales c
-            LEFT OUTER JOIN resumenConsumos r ON c.cliente_id = r.cliente_id) r,
-            tarjeta t
-        WHERE
-            NOT t.bloqueada AND
-            t.cliente_id = r.cliente_id;
-*/
-CALL update_categories();
+CALL update_categories(@inicio + interval '41' day + interval '366' day);
 
 SELECT 'Deberia ser 1:' as m, c.categoria_id, c.fecha from categoriasActuales c 
 WHERE c.cliente_id = @foobar;
