@@ -225,11 +225,11 @@ VALUES(@nro_factura_jacinto_febrero, @id_tarjeta_jacinto, @id_parque_las_ventura
 
 INSERT INTO -- La rusa loca en plata -> $80
 	 consumo(numero_de_factura, numero_de_tarjeta, medio_entretenimiento_id, importe, fecha_hora)
-VALUES(@nro_factura_jacinto_febrero, @id_tarjeta_jacinto, @id_la_rusa_loca, @importe_la_rusa_loca_oro, '2018-02-20 10:20:42');
+VALUES(@nro_factura_jacinto_febrero, @id_tarjeta_jacinto, @id_la_rusa_loca, @importe_la_rusa_loca_plata, '2018-02-20 10:20:42');
 
 INSERT INTO -- La rusa loca en plata -> $80
 	 consumo(numero_de_factura, numero_de_tarjeta, medio_entretenimiento_id, importe, fecha_hora)
-VALUES(@nro_factura_jacinto_febrero, @id_tarjeta_jacinto, @id_la_rusa_loca, @importe_la_rusa_loca_oro, '2018-02-20 10:42:42');
+VALUES(@nro_factura_jacinto_febrero, @id_tarjeta_jacinto, @id_la_rusa_loca, @importe_la_rusa_loca_plata, '2018-02-20 10:42:42');
 
 
 /*** FIN FEBRERO 2018***/

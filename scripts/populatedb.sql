@@ -492,40 +492,40 @@ VALUES(@id_fiesta_bizarra, @id_categoria_oro, @desc_fiesta_bizarra_oro);
 -- Importes con descuentos aplicados por categoria
 
 /*BRONCE*/
-SET @importe_parque_las_venturas_bronce = @precio_parque_las_venturas * (100 - @desc_parque_las_venturas_bronce);
-SET @importe_la_rusa_loca_bronce = @precio_la_rusa_loca * (100 - @desc_la_rusa_loca_bronce);
-SET @importe_el_argento_bronce = @precio_el_argento * (100 - @desc_el_argento_bronce);
+SET @importe_parque_las_venturas_bronce = @precio_parque_las_venturas * (100 - @desc_parque_las_venturas_bronce)/100;
+SET @importe_la_rusa_loca_bronce = @precio_la_rusa_loca * (100 - @desc_la_rusa_loca_bronce)/100;
+SET @importe_el_argento_bronce = @precio_el_argento * (100 - @desc_el_argento_bronce)/100;
 
-SET @importe_parque_astronomicus_bronce = @precio_parque_astronomicus * (100 - @desc_parque_astronomicus_bronce);
-SET @importe_la_jazzy_rue_bronce = @precio_la_jazzy_rue * (100 - @desc_la_jazzy_rue_bronce);
-SET @importe_april_in_paris_bronce = @precio_april_in_paris * (100 - @desc_april_in_paris_bronce);
+SET @importe_parque_astronomicus_bronce = @precio_parque_astronomicus * (100 - @desc_parque_astronomicus_bronce)/100;
+SET @importe_la_jazzy_rue_bronce = @precio_la_jazzy_rue * (100 - @desc_la_jazzy_rue_bronce)/100;
+SET @importe_april_in_paris_bronce = @precio_april_in_paris * (100 - @desc_april_in_paris_bronce)/100;
 
-SET @importe_bypass_fest_bronce = @precio_bypass_fest * (100 - @desc_bypass_fest_bronce);
-SET @importe_fiesta_bizarra_bronce = @precio_fiesta_bizarra * (100 - @desc_fiesta_bizarra_bronce);
+SET @importe_bypass_fest_bronce = @precio_bypass_fest * (100 - @desc_bypass_fest_bronce)/100;
+SET @importe_fiesta_bizarra_bronce = @precio_fiesta_bizarra * (100 - @desc_fiesta_bizarra_bronce)/100;
 
 /*PLATA*/
-SET @importe_parque_las_venturas_plata = @precio_parque_las_venturas * (100 - @desc_parque_las_venturas_plata);
-SET @importe_la_rusa_loca_plata = @precio_la_rusa_loca * (100 - @desc_la_rusa_loca_plata);
-SET @importe_el_argento_plata = @precio_el_argento * (100 - @desc_el_argento_plata);
+SET @importe_parque_las_venturas_plata = @precio_parque_las_venturas * (100 - @desc_parque_las_venturas_plata)/100;
+SET @importe_la_rusa_loca_plata = @precio_la_rusa_loca * (100 - @desc_la_rusa_loca_plata)/100;
+SET @importe_el_argento_plata = @precio_el_argento * (100 - @desc_el_argento_plata)/100;
 
-SET @importe_parque_astronomicus_plata = @precio_parque_astronomicus * (100 - @desc_parque_astronomicus_plata);
-SET @importe_la_jazzy_rue_plata = @precio_la_jazzy_rue * (100 - @desc_la_jazzy_rue_plata);
-SET @importe_april_in_paris_plata = @precio_april_in_paris * (100 - @desc_april_in_paris_plata);
+SET @importe_parque_astronomicus_plata = @precio_parque_astronomicus * (100 - @desc_parque_astronomicus_plata)/100;
+SET @importe_la_jazzy_rue_plata = @precio_la_jazzy_rue * (100 - @desc_la_jazzy_rue_plata)/100;
+SET @importe_april_in_paris_plata = @precio_april_in_paris * (100 - @desc_april_in_paris_plata)/100;
 
-SET @importe_bypass_fest_plata = @precio_bypass_fest * (100 - @desc_bypass_fest_plata);
-SET @importe_fiesta_bizarra_plata = @precio_fiesta_bizarra * (100 - @desc_fiesta_bizarra_plata);
+SET @importe_bypass_fest_plata = @precio_bypass_fest * (100 - @desc_bypass_fest_plata)/100;
+SET @importe_fiesta_bizarra_plata = @precio_fiesta_bizarra * (100 - @desc_fiesta_bizarra_plata)/100;
 
 /*ORO*/
-SET @importe_parque_las_venturas_oro = @precio_parque_las_venturas * (100 - @desc_parque_las_venturas_oro);
-SET @importe_la_rusa_loca_oro = @precio_la_rusa_loca * (100 - @desc_la_rusa_loca_oro);
-SET @importe_el_argento_oro = @precio_el_argento * (100 - @desc_el_argento_oro);
+SET @importe_parque_las_venturas_oro = @precio_parque_las_venturas * (100 - @desc_parque_las_venturas_oro)/100;
+SET @importe_la_rusa_loca_oro = @precio_la_rusa_loca * (100 - @desc_la_rusa_loca_oro)/100;
+SET @importe_el_argento_oro = @precio_el_argento * (100 - @desc_el_argento_oro)/100;
 
-SET @importe_parque_astronomicus_oro = @precio_parque_astronomicus * (100 - @desc_parque_astronomicus_oro);
-SET @importe_la_jazzy_rue_oro = @precio_la_jazzy_rue * (100 - @desc_la_jazzy_rue_oro);
-SET @importe_april_in_paris_oro = @precio_april_in_paris * (100 - @desc_april_in_paris_oro);
+SET @importe_parque_astronomicus_oro = @precio_parque_astronomicus * (100 - @desc_parque_astronomicus_oro)/100;
+SET @importe_la_jazzy_rue_oro = @precio_la_jazzy_rue * (100 - @desc_la_jazzy_rue_oro)/100;
+SET @importe_april_in_paris_oro = @precio_april_in_paris * (100 - @desc_april_in_paris_oro)/100;
 
-SET @importe_bypass_fest_oro = @precio_bypass_fest * (100 - @desc_bypass_fest_oro);
-SET @importe_fiesta_bizarra_oro = @precio_fiesta_bizarra * (100 - @desc_fiesta_bizarra_oro);
+SET @importe_bypass_fest_oro = @precio_bypass_fest * (100 - @desc_bypass_fest_oro)/100;
+SET @importe_fiesta_bizarra_oro = @precio_fiesta_bizarra * (100 - @desc_fiesta_bizarra_oro)/100;
 
 
 /******** CLIENTE TOMAS (FRECUENCIA ALTA) ********/
@@ -709,11 +709,11 @@ VALUES(@nro_factura_jacinto_febrero, @id_tarjeta_jacinto, @id_parque_las_ventura
 
 INSERT INTO -- La rusa loca en plata -> $80
 	 consumo(numero_de_factura, numero_de_tarjeta, medio_entretenimiento_id, importe, fecha_hora)
-VALUES(@nro_factura_jacinto_febrero, @id_tarjeta_jacinto, @id_la_rusa_loca, @importe_la_rusa_loca_oro, '2018-02-20 10:20:42');
+VALUES(@nro_factura_jacinto_febrero, @id_tarjeta_jacinto, @id_la_rusa_loca, @importe_la_rusa_loca_plata, '2018-02-20 10:20:42');
 
 INSERT INTO -- La rusa loca en plata -> $80
 	 consumo(numero_de_factura, numero_de_tarjeta, medio_entretenimiento_id, importe, fecha_hora)
-VALUES(@nro_factura_jacinto_febrero, @id_tarjeta_jacinto, @id_la_rusa_loca, @importe_la_rusa_loca_oro, '2018-02-20 10:42:42');
+VALUES(@nro_factura_jacinto_febrero, @id_tarjeta_jacinto, @id_la_rusa_loca, @importe_la_rusa_loca_plata, '2018-02-20 10:42:42');
 
 
 /*** FIN FEBRERO 2018***/
