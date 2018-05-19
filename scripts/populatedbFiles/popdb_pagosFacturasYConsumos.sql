@@ -11,6 +11,7 @@
 SET @importe_parque_las_venturas_bronce = @precio_parque_las_venturas * (100 - @desc_parque_las_venturas_bronce)/100;
 SET @importe_la_rusa_loca_bronce = @precio_la_rusa_loca * (100 - @desc_la_rusa_loca_bronce)/100;
 SET @importe_el_argento_bronce = @precio_el_argento * (100 - @desc_el_argento_bronce)/100;
+SET @importe_barco_pirata_bronce = @precio_barco_pirata * (100 - @desc_barco_pirata_bronce)/100;
 
 SET @importe_parque_astronomicus_bronce = @precio_parque_astronomicus * (100 - @desc_parque_astronomicus_bronce)/100;
 SET @importe_la_jazzy_rue_bronce = @precio_la_jazzy_rue * (100 - @desc_la_jazzy_rue_bronce)/100;
@@ -23,6 +24,7 @@ SET @importe_fiesta_bizarra_bronce = @precio_fiesta_bizarra * (100 - @desc_fiest
 SET @importe_parque_las_venturas_plata = @precio_parque_las_venturas * (100 - @desc_parque_las_venturas_plata)/100;
 SET @importe_la_rusa_loca_plata = @precio_la_rusa_loca * (100 - @desc_la_rusa_loca_plata)/100;
 SET @importe_el_argento_plata = @precio_el_argento * (100 - @desc_el_argento_plata)/100;
+SET @importe_barco_pirata_plata = @precio_barco_pirata * (100 - @desc_barco_pirata_plata)/100;
 
 SET @importe_parque_astronomicus_plata = @precio_parque_astronomicus * (100 - @desc_parque_astronomicus_plata)/100;
 SET @importe_la_jazzy_rue_plata = @precio_la_jazzy_rue * (100 - @desc_la_jazzy_rue_plata)/100;
@@ -35,6 +37,7 @@ SET @importe_fiesta_bizarra_plata = @precio_fiesta_bizarra * (100 - @desc_fiesta
 SET @importe_parque_las_venturas_oro = @precio_parque_las_venturas * (100 - @desc_parque_las_venturas_oro)/100;
 SET @importe_la_rusa_loca_oro = @precio_la_rusa_loca * (100 - @desc_la_rusa_loca_oro)/100;
 SET @importe_el_argento_oro = @precio_el_argento * (100 - @desc_el_argento_oro)/100;
+SET @importe_barco_pirata_oro = @precio_barco_pirata * (100 - @desc_barco_pirata_oro)/100;
 
 SET @importe_parque_astronomicus_oro = @precio_parque_astronomicus * (100 - @desc_parque_astronomicus_oro)/100;
 SET @importe_la_jazzy_rue_oro = @precio_la_jazzy_rue * (100 - @desc_la_jazzy_rue_oro)/100;

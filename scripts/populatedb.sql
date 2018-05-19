@@ -10,7 +10,13 @@ USE tpbases;
 /*Variables utiles*/
 
 SET @fecha_inicio_programa = '2018-01-01';
+SET @tipo_parque = 'PARQUE';
+SET @tipo_atraccion = 'ATRACCION';
+SET @tipo_evento = 'EVENTO';
 
+SET @mp_visa = 'VISA';
+SET @mp_amex = 'AMEX';
+SET @mp_master = 'MASTERCARD';
 /************  UBICACIONES  *****************/
 
 /*** De Clientes ****/
@@ -96,7 +102,7 @@ SET @id_ubicacion_evento_fiesta_bizarra = LAST_INSERT_ID();
 
 /*************  CLIENTES  **************/  
 
-SET @medio_de_pago_tomas ='VISA';
+SET @medio_de_pago_tomas =@mp_visa;
 INSERT INTO -- CONSUMIDOR FRECUENTE CATEGORIA GOLD 
     cliente(nombre, apellido, medio_de_pago, ubicacion_facturacion, 
             ubicacion_residencia,
@@ -104,7 +110,7 @@ INSERT INTO -- CONSUMIDOR FRECUENTE CATEGORIA GOLD
 VALUES ('Tomás', 'Pastore', @medio_de_pago_tomas, @id_ubicacion_facturacion_tomas, @id_ubicacion_residencia_tomas, 39560320);
 SET @id_tomas = LAST_INSERT_ID();
 
-SET @medio_de_pago_jacinto ='AMEX';
+SET @medio_de_pago_jacinto =@mp_amex;
 INSERT INTO -- CONSUMIDOR MEDIO CATEGORIA PLATA
     cliente(nombre, apellido, medio_de_pago, ubicacion_facturacion, 
             ubicacion_residencia,
@@ -112,7 +118,7 @@ INSERT INTO -- CONSUMIDOR MEDIO CATEGORIA PLATA
 VALUES ('Jacinto', 'Populea',@medio_de_pago_jacinto, @id_ubicacion_facturacion_jacinto, @id_ubicacion_residencia_jacinto, 40000000);
 SET @id_jacinto = LAST_INSERT_ID();
 
-SET @medio_de_pago_carmichael = 'MASTERCARD';
+SET @medio_de_pago_carmichael = @mp_master;
 INSERT INTO -- CONSUMIDOR BAJO CATEGORIA BRONCE
     cliente(nombre, apellido, medio_de_pago, ubicacion_facturacion, 
             ubicacion_residencia,
@@ -120,7 +126,7 @@ INSERT INTO -- CONSUMIDOR BAJO CATEGORIA BRONCE
 VALUES ('Carmichael', 'Buonavita',@medio_de_pago_carmichael, @id_ubicacion_facturacion_carmichael, @id_ubicacion_residencia_carmichael, 40000001);
 SET @id_carmichael = LAST_INSERT_ID();
 
-SET @medio_de_pago_michael = 'MASTERCARD';
+SET @medio_de_pago_michael = @mp_master;
 INSERT INTO -- CLIENTE RATA (NUNCA CONSUMIO)
     cliente(nombre, apellido, medio_de_pago, ubicacion_facturacion, 
             ubicacion_residencia,
@@ -238,7 +244,7 @@ VALUES(@fecha_inicio_programa, @id_tarjeta_michael, @id_categoria_bronce);
 SET @precio_parque_las_venturas = 300;
 INSERT INTO
 	medio_entretenimiento (precio, nombre, tipo)
-VALUES (@precio_parque_las_venturas, 'Parque de Las Venturas', 'PARQUE');
+VALUES (@precio_parque_las_venturas, 'Parque de Las Venturas', @tipo_parque);
 SET @id_parque_las_venturas = LAST_INSERT_ID();
 /*Parque*/
 INSERT INTO
@@ -246,10 +252,9 @@ INSERT INTO
 VALUES (@id_parque_las_venturas, @id_ubicacion_parque_las_venturas); 
 
 /*Atracciones del parque Las Venturas*/
-
 SET @precio_la_rusa_loca = 100;
 INSERT INTO medio_entretenimiento (precio, nombre, tipo)
-VALUES (@precio_la_rusa_loca, 'La Rusa Loca', 'ATRACCION');
+VALUES (@precio_la_rusa_loca, 'La Rusa Loca', @tipo_atraccion);
 SET @id_la_rusa_loca = LAST_INSERT_ID();
 INSERT INTO
     atraccion (atraccion_id, parque_id, edad_desde, edad_hasta, altura_min)
@@ -257,12 +262,19 @@ VALUES(@id_la_rusa_loca, @id_parque_las_venturas, 5, 80, '80 cm');
 
 SET @precio_el_argento = 50;
 INSERT INTO medio_entretenimiento (precio, nombre, tipo)
-VALUES (@precio_el_argento, 'El Argento', 'ATRACCION');
+VALUES (@precio_el_argento, 'El Argento', @tipo_atraccion);
 SET @id_el_argento = LAST_INSERT_ID();
 INSERT INTO
     atraccion (atraccion_id, parque_id, edad_desde, edad_hasta, altura_min)
 VALUES(@id_el_argento, @id_parque_las_venturas, 2, 85,'50 cm');
 
+SET @precio_barco_pirata = 30;
+INSERT INTO medio_entretenimiento (precio, nombre, tipo)
+VALUES (@precio_barco_pirata, 'Barco pirata', @tipo_atraccion);
+SET @id_barco_pirata = LAST_INSERT_ID();
+INSERT INTO
+    atraccion (atraccion_id, parque_id, edad_desde, edad_hasta, altura_min)
+VALUES(@id_barco_pirata, @id_parque_las_venturas, 10, 50,'100 cm');
 
 /*Parque Astronomicus*/
 
@@ -271,7 +283,7 @@ VALUES(@id_el_argento, @id_parque_las_venturas, 2, 85,'50 cm');
 /*Medio de entretenimiento*/
 SET @precio_parque_astronomicus = 300;
 INSERT INTO medio_entretenimiento (precio, nombre, tipo)
-VALUES (@precio_parque_astronomicus, 'Parque Astronomicus', 'PARQUE');
+VALUES (@precio_parque_astronomicus, 'Parque Astronomicus', @tipo_parque);
 SET @id_parque_astronomicus = LAST_INSERT_ID();
 /*Parque*/
 INSERT INTO parque (parque_id, ubicacion_id)
@@ -280,7 +292,7 @@ VALUES (@id_parque_astronomicus, @id_ubicacion_parque_astronomicus);
 /*Atracciones del parque Astronomicus*/
 SET @precio_la_jazzy_rue = 200;
 INSERT INTO medio_entretenimiento (precio, nombre, tipo)
-VALUES (@precio_la_jazzy_rue, 'La Jazzy Rue', 'ATRACCION');
+VALUES (@precio_la_jazzy_rue, 'La Jazzy Rue', @tipo_atraccion);
 SET @id_la_jazzy_rue = LAST_INSERT_ID();
 INSERT INTO
     atraccion (atraccion_id, parque_id, edad_desde, edad_hasta, altura_min)
@@ -288,7 +300,7 @@ VALUES(@id_la_jazzy_rue, @id_parque_astronomicus, 0, 99, '0 cm');
 
 SET @precio_april_in_paris = 150;
 INSERT INTO medio_entretenimiento (precio, nombre, tipo)
-VALUES (@precio_april_in_paris, 'April in Paris', 'ATRACCION');
+VALUES (@precio_april_in_paris, 'April in Paris', @tipo_atraccion);
 SET @id_april_in_paris = LAST_INSERT_ID();
 INSERT INTO
     atraccion (atraccion_id, parque_id, edad_desde, edad_hasta, altura_min)
@@ -310,7 +322,7 @@ VALUES(@cuit_empresa_cara,'STARBUCKS COFFE ARGENTINA S.R.L.', @id_ubicacion_empr
 SET @precio_bypass_fest = 300;
 INSERT INTO 
 	medio_entretenimiento (precio, nombre, tipo)
-VALUES (@precio_bypass_fest, 'Bypass Fest', 'EVENTO');
+VALUES (@precio_bypass_fest, 'Bypass Fest', @tipo_evento);
 SET @id_bypass_fest = LAST_INSERT_ID();
 
 INSERT INTO
@@ -329,7 +341,7 @@ VALUES(@cuit_empresa_barata, 'ANONIMUS S.A.', @id_ubicacion_empresa_org_barata);
 SET @precio_fiesta_bizarra = 200;
 INSERT INTO 
 	medio_entretenimiento (precio, nombre, tipo)
-VALUES (@precio_fiesta_bizarra, 'Fiesta Bizarra', 'EVENTO');
+VALUES (@precio_fiesta_bizarra, 'Fiesta Bizarra', @tipo_evento);
 SET @id_fiesta_bizarra = LAST_INSERT_ID();
 INSERT INTO
 	evento(evento_id, cuit_organizadora, ubicacion_id, horario_desde, horario_hasta)
@@ -340,7 +352,6 @@ VALUES(@id_fiesta_bizarra, @cuit_empresa_barata, @id_ubicacion_evento_fiesta_biz
 /***************************** FIN MEDIOS DE ENTRETENIMIENTO ************************/
 
 /*********  DESCUENTOS POR CATEGORIA (PERMITE ACCEDER)  **********/
--- VER QUE ONDA LOS DESCUENTOS DE LOS EVENTOS, NO DEBERIAN ESTAR ATADOS A LA VIGENCIA DEL EVENTO DE ALGUNA FORMA?
 
 /****  BRONCE  ****/
 
@@ -351,14 +362,19 @@ INSERT INTO -- acceso con descuento a parque
 VALUES(@id_parque_las_venturas, @id_categoria_bronce, @desc_parque_las_venturas_bronce);
 
 SET @desc_la_rusa_loca_bronce = 10;
-INSERT INTO -- acceso con descuento a parque
+INSERT INTO -- acceso con descuento a atraccion
 	permite_acceder(medio_id, categoria_id, descuento)
 VALUES(@id_la_rusa_loca, @id_categoria_bronce, @desc_la_rusa_loca_bronce);
 
 SET @desc_el_argento_bronce = 10;
-INSERT INTO -- acceso con descuento a parque
+INSERT INTO -- acceso con descuento a atraccion
 	permite_acceder(medio_id, categoria_id, descuento)
 VALUES(@id_el_argento, @id_categoria_bronce, @desc_el_argento_bronce);
+
+SET @desc_barco_pirata_bronce = 10;
+INSERT INTO -- acceso con descuento a atraccion
+	permite_acceder(medio_id, categoria_id, descuento)
+VALUES(@id_barco_pirata, @id_categoria_bronce, @desc_barco_pirata_bronce);
 
 /*PARQUE ASTRONOMICUS*/
 SET @desc_parque_astronomicus_bronce = 0;
@@ -392,19 +408,24 @@ VALUES(@id_fiesta_bizarra, @id_categoria_bronce, @desc_fiesta_bizarra_bronce);
 
 /*PARQUE LAS VENTURAS*/
 SET @desc_parque_las_venturas_plata = 20;
-INSERT INTO
+INSERT INTO -- acceso con descuento a parque
 	permite_acceder(medio_id, categoria_id, descuento)
 VALUES(@id_parque_las_venturas, @id_categoria_plata, @desc_parque_las_venturas_plata);
 
 SET @desc_la_rusa_loca_plata = 20;
-INSERT INTO
+INSERT INTO -- acceso con descuento a atraccion
 	permite_acceder(medio_id, categoria_id, descuento)
 VALUES(@id_la_rusa_loca, @id_categoria_plata, @desc_la_rusa_loca_plata);
 
 SET @desc_el_argento_plata = 20;
-INSERT INTO
+INSERT INTO -- acceso con descuento a atraccion
 	permite_acceder(medio_id, categoria_id, descuento)
 VALUES(@id_el_argento, @id_categoria_plata, @desc_el_argento_plata);
+
+SET @desc_barco_pirata_plata = 20;
+INSERT INTO -- acceso con descuento a atraccion
+	permite_acceder(medio_id, categoria_id, descuento)
+VALUES(@id_barco_pirata, @id_categoria_plata, @desc_barco_pirata_plata);
 
 /*PARQUE ASTRONOMICUS*/
 SET @desc_parque_astronomicus_plata = 10;
@@ -438,19 +459,24 @@ VALUES(@id_fiesta_bizarra, @id_categoria_plata, @desc_fiesta_bizarra_plata);
 
 /*PARQUE LAS VENTURAS*/
 SET @desc_parque_las_venturas_oro = 50;
-INSERT INTO
+INSERT INTO -- acceso con descuento a parque
 	permite_acceder(medio_id, categoria_id, descuento)
 VALUES(@id_la_rusa_loca, @id_categoria_oro, @desc_parque_las_venturas_oro);
 
 SET @desc_la_rusa_loca_oro = 50;
-INSERT INTO
+INSERT INTO -- acceso con descuento a atraccion
 	permite_acceder(medio_id, categoria_id, descuento)
 VALUES(@id_parque_las_venturas, @id_categoria_oro, @desc_la_rusa_loca_oro);
 
 SET @desc_el_argento_oro = 50;
-INSERT INTO
+INSERT INTO -- acceso con descuento a atraccion
 	permite_acceder(medio_id, categoria_id, descuento)
 VALUES(@id_el_argento, @id_categoria_oro, @desc_el_argento_oro);
+
+SET @desc_barco_pirata_oro = 50;
+INSERT INTO -- acceso con descuento a atraccion
+	permite_acceder(medio_id, categoria_id, descuento)
+VALUES(@id_barco_pirata, @id_categoria_oro, @desc_barco_pirata_oro);
 
 /*PARQUE ASTRONOMICUS*/
 SET @desc_parque_astronomicus_oro = 40;
@@ -495,6 +521,7 @@ VALUES(@id_fiesta_bizarra, @id_categoria_oro, @desc_fiesta_bizarra_oro);
 SET @importe_parque_las_venturas_bronce = @precio_parque_las_venturas * (100 - @desc_parque_las_venturas_bronce)/100;
 SET @importe_la_rusa_loca_bronce = @precio_la_rusa_loca * (100 - @desc_la_rusa_loca_bronce)/100;
 SET @importe_el_argento_bronce = @precio_el_argento * (100 - @desc_el_argento_bronce)/100;
+SET @importe_barco_pirata_bronce = @precio_barco_pirata * (100 - @desc_barco_pirata_bronce)/100;
 
 SET @importe_parque_astronomicus_bronce = @precio_parque_astronomicus * (100 - @desc_parque_astronomicus_bronce)/100;
 SET @importe_la_jazzy_rue_bronce = @precio_la_jazzy_rue * (100 - @desc_la_jazzy_rue_bronce)/100;
@@ -507,6 +534,7 @@ SET @importe_fiesta_bizarra_bronce = @precio_fiesta_bizarra * (100 - @desc_fiest
 SET @importe_parque_las_venturas_plata = @precio_parque_las_venturas * (100 - @desc_parque_las_venturas_plata)/100;
 SET @importe_la_rusa_loca_plata = @precio_la_rusa_loca * (100 - @desc_la_rusa_loca_plata)/100;
 SET @importe_el_argento_plata = @precio_el_argento * (100 - @desc_el_argento_plata)/100;
+SET @importe_barco_pirata_plata = @precio_barco_pirata * (100 - @desc_barco_pirata_plata)/100;
 
 SET @importe_parque_astronomicus_plata = @precio_parque_astronomicus * (100 - @desc_parque_astronomicus_plata)/100;
 SET @importe_la_jazzy_rue_plata = @precio_la_jazzy_rue * (100 - @desc_la_jazzy_rue_plata)/100;
@@ -519,6 +547,7 @@ SET @importe_fiesta_bizarra_plata = @precio_fiesta_bizarra * (100 - @desc_fiesta
 SET @importe_parque_las_venturas_oro = @precio_parque_las_venturas * (100 - @desc_parque_las_venturas_oro)/100;
 SET @importe_la_rusa_loca_oro = @precio_la_rusa_loca * (100 - @desc_la_rusa_loca_oro)/100;
 SET @importe_el_argento_oro = @precio_el_argento * (100 - @desc_el_argento_oro)/100;
+SET @importe_barco_pirata_oro = @precio_barco_pirata * (100 - @desc_barco_pirata_oro)/100;
 
 SET @importe_parque_astronomicus_oro = @precio_parque_astronomicus * (100 - @desc_parque_astronomicus_oro)/100;
 SET @importe_la_jazzy_rue_oro = @precio_la_jazzy_rue * (100 - @desc_la_jazzy_rue_oro)/100;

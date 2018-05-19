@@ -1,6 +1,5 @@
 
 /*********  DESCUENTOS POR CATEGORIA (PERMITE ACCEDER)  **********/
--- VER QUE ONDA LOS DESCUENTOS DE LOS EVENTOS, NO DEBERIAN ESTAR ATADOS A LA VIGENCIA DEL EVENTO DE ALGUNA FORMA?
 
 /****  BRONCE  ****/
 
@@ -11,14 +10,19 @@ INSERT INTO -- acceso con descuento a parque
 VALUES(@id_parque_las_venturas, @id_categoria_bronce, @desc_parque_las_venturas_bronce);
 
 SET @desc_la_rusa_loca_bronce = 10;
-INSERT INTO -- acceso con descuento a parque
+INSERT INTO -- acceso con descuento a atraccion
 	permite_acceder(medio_id, categoria_id, descuento)
 VALUES(@id_la_rusa_loca, @id_categoria_bronce, @desc_la_rusa_loca_bronce);
 
 SET @desc_el_argento_bronce = 10;
-INSERT INTO -- acceso con descuento a parque
+INSERT INTO -- acceso con descuento a atraccion
 	permite_acceder(medio_id, categoria_id, descuento)
 VALUES(@id_el_argento, @id_categoria_bronce, @desc_el_argento_bronce);
+
+SET @desc_barco_pirata_bronce = 10;
+INSERT INTO -- acceso con descuento a atraccion
+	permite_acceder(medio_id, categoria_id, descuento)
+VALUES(@id_barco_pirata, @id_categoria_bronce, @desc_barco_pirata_bronce);
 
 /*PARQUE ASTRONOMICUS*/
 SET @desc_parque_astronomicus_bronce = 0;
@@ -52,19 +56,24 @@ VALUES(@id_fiesta_bizarra, @id_categoria_bronce, @desc_fiesta_bizarra_bronce);
 
 /*PARQUE LAS VENTURAS*/
 SET @desc_parque_las_venturas_plata = 20;
-INSERT INTO
+INSERT INTO -- acceso con descuento a parque
 	permite_acceder(medio_id, categoria_id, descuento)
 VALUES(@id_parque_las_venturas, @id_categoria_plata, @desc_parque_las_venturas_plata);
 
 SET @desc_la_rusa_loca_plata = 20;
-INSERT INTO
+INSERT INTO -- acceso con descuento a atraccion
 	permite_acceder(medio_id, categoria_id, descuento)
 VALUES(@id_la_rusa_loca, @id_categoria_plata, @desc_la_rusa_loca_plata);
 
 SET @desc_el_argento_plata = 20;
-INSERT INTO
+INSERT INTO -- acceso con descuento a atraccion
 	permite_acceder(medio_id, categoria_id, descuento)
 VALUES(@id_el_argento, @id_categoria_plata, @desc_el_argento_plata);
+
+SET @desc_barco_pirata_plata = 20;
+INSERT INTO -- acceso con descuento a atraccion
+	permite_acceder(medio_id, categoria_id, descuento)
+VALUES(@id_barco_pirata, @id_categoria_plata, @desc_barco_pirata_plata);
 
 /*PARQUE ASTRONOMICUS*/
 SET @desc_parque_astronomicus_plata = 10;
@@ -98,19 +107,24 @@ VALUES(@id_fiesta_bizarra, @id_categoria_plata, @desc_fiesta_bizarra_plata);
 
 /*PARQUE LAS VENTURAS*/
 SET @desc_parque_las_venturas_oro = 50;
-INSERT INTO
+INSERT INTO -- acceso con descuento a parque
 	permite_acceder(medio_id, categoria_id, descuento)
 VALUES(@id_la_rusa_loca, @id_categoria_oro, @desc_parque_las_venturas_oro);
 
 SET @desc_la_rusa_loca_oro = 50;
-INSERT INTO
+INSERT INTO -- acceso con descuento a atraccion
 	permite_acceder(medio_id, categoria_id, descuento)
 VALUES(@id_parque_las_venturas, @id_categoria_oro, @desc_la_rusa_loca_oro);
 
 SET @desc_el_argento_oro = 50;
-INSERT INTO
+INSERT INTO -- acceso con descuento a atraccion
 	permite_acceder(medio_id, categoria_id, descuento)
 VALUES(@id_el_argento, @id_categoria_oro, @desc_el_argento_oro);
+
+SET @desc_barco_pirata_oro = 50;
+INSERT INTO -- acceso con descuento a atraccion
+	permite_acceder(medio_id, categoria_id, descuento)
+VALUES(@id_barco_pirata, @id_categoria_oro, @desc_barco_pirata_oro);
 
 /*PARQUE ASTRONOMICUS*/
 SET @desc_parque_astronomicus_oro = 40;

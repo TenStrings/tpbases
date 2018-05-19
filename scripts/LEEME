@@ -1,0 +1,8 @@
+
+*createdb crea el esquema de la base de datos, es decir las tablas vacias.
+
+*El script gatherPopulation genera populatedb.sql que es el script que popula la base de datos
+
+*El procedimiento almacenado se encuentra en update_categories.sql y las queries en queries.sql
+
+Es decir, se debe correr en orden primero createdb, luego populatedb (recordar que se genera con gatherPopulation.py o gatherPopulation.sh dandole permisos de ejecución en el directorio) y luego lo que se quiera probar, queries o procedimiento almacenado.  

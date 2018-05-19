@@ -19,7 +19,6 @@ INSERT INTO
 VALUES (@id_parque_las_venturas, @id_ubicacion_parque_las_venturas); 
 
 /*Atracciones del parque Las Venturas*/
-
 SET @precio_la_rusa_loca = 100;
 INSERT INTO medio_entretenimiento (precio, nombre, tipo)
 VALUES (@precio_la_rusa_loca, 'La Rusa Loca', @tipo_atraccion);
@@ -36,6 +35,13 @@ INSERT INTO
     atraccion (atraccion_id, parque_id, edad_desde, edad_hasta, altura_min)
 VALUES(@id_el_argento, @id_parque_las_venturas, 2, 85,'50 cm');
 
+SET @precio_barco_pirata = 30;
+INSERT INTO medio_entretenimiento (precio, nombre, tipo)
+VALUES (@precio_barco_pirata, 'Barco pirata', @tipo_atraccion);
+SET @id_barco_pirata = LAST_INSERT_ID();
+INSERT INTO
+    atraccion (atraccion_id, parque_id, edad_desde, edad_hasta, altura_min)
+VALUES(@id_barco_pirata, @id_parque_las_venturas, 10, 50,'100 cm');
 
 /*Parque Astronomicus*/
 
