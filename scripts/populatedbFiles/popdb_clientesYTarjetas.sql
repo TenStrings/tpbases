@@ -1,7 +1,7 @@
 
 /*************  CLIENTES  **************/  
 
-SET @medio_de_pago_tomas ='VISA';
+SET @medio_de_pago_tomas =@mp_visa;
 INSERT INTO -- CONSUMIDOR FRECUENTE CATEGORIA GOLD 
     cliente(nombre, apellido, medio_de_pago, ubicacion_facturacion, 
             ubicacion_residencia,
@@ -9,7 +9,7 @@ INSERT INTO -- CONSUMIDOR FRECUENTE CATEGORIA GOLD
 VALUES ('Tomás', 'Pastore', @medio_de_pago_tomas, @id_ubicacion_facturacion_tomas, @id_ubicacion_residencia_tomas, 39560320);
 SET @id_tomas = LAST_INSERT_ID();
 
-SET @medio_de_pago_jacinto ='AMEX';
+SET @medio_de_pago_jacinto =@mp_amex;
 INSERT INTO -- CONSUMIDOR MEDIO CATEGORIA PLATA
     cliente(nombre, apellido, medio_de_pago, ubicacion_facturacion, 
             ubicacion_residencia,
@@ -17,7 +17,7 @@ INSERT INTO -- CONSUMIDOR MEDIO CATEGORIA PLATA
 VALUES ('Jacinto', 'Populea',@medio_de_pago_jacinto, @id_ubicacion_facturacion_jacinto, @id_ubicacion_residencia_jacinto, 40000000);
 SET @id_jacinto = LAST_INSERT_ID();
 
-SET @medio_de_pago_carmichael = 'MASTERCARD';
+SET @medio_de_pago_carmichael = @mp_master;
 INSERT INTO -- CONSUMIDOR BAJO CATEGORIA BRONCE
     cliente(nombre, apellido, medio_de_pago, ubicacion_facturacion, 
             ubicacion_residencia,
@@ -25,7 +25,7 @@ INSERT INTO -- CONSUMIDOR BAJO CATEGORIA BRONCE
 VALUES ('Carmichael', 'Buonavita',@medio_de_pago_carmichael, @id_ubicacion_facturacion_carmichael, @id_ubicacion_residencia_carmichael, 40000001);
 SET @id_carmichael = LAST_INSERT_ID();
 
-SET @medio_de_pago_michael = 'MASTERCARD';
+SET @medio_de_pago_michael = @mp_master;
 INSERT INTO -- CLIENTE RATA (NUNCA CONSUMIO)
     cliente(nombre, apellido, medio_de_pago, ubicacion_facturacion, 
             ubicacion_residencia,

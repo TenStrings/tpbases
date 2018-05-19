@@ -11,7 +11,7 @@
 SET @precio_parque_las_venturas = 300;
 INSERT INTO
 	medio_entretenimiento (precio, nombre, tipo)
-VALUES (@precio_parque_las_venturas, 'Parque de Las Venturas', 'PARQUE');
+VALUES (@precio_parque_las_venturas, 'Parque de Las Venturas', @tipo_parque);
 SET @id_parque_las_venturas = LAST_INSERT_ID();
 /*Parque*/
 INSERT INTO
@@ -22,7 +22,7 @@ VALUES (@id_parque_las_venturas, @id_ubicacion_parque_las_venturas);
 
 SET @precio_la_rusa_loca = 100;
 INSERT INTO medio_entretenimiento (precio, nombre, tipo)
-VALUES (@precio_la_rusa_loca, 'La Rusa Loca', 'ATRACCION');
+VALUES (@precio_la_rusa_loca, 'La Rusa Loca', @tipo_atraccion);
 SET @id_la_rusa_loca = LAST_INSERT_ID();
 INSERT INTO
     atraccion (atraccion_id, parque_id, edad_desde, edad_hasta, altura_min)
@@ -30,7 +30,7 @@ VALUES(@id_la_rusa_loca, @id_parque_las_venturas, 5, 80, '80 cm');
 
 SET @precio_el_argento = 50;
 INSERT INTO medio_entretenimiento (precio, nombre, tipo)
-VALUES (@precio_el_argento, 'El Argento', 'ATRACCION');
+VALUES (@precio_el_argento, 'El Argento', @tipo_atraccion);
 SET @id_el_argento = LAST_INSERT_ID();
 INSERT INTO
     atraccion (atraccion_id, parque_id, edad_desde, edad_hasta, altura_min)
@@ -44,7 +44,7 @@ VALUES(@id_el_argento, @id_parque_las_venturas, 2, 85,'50 cm');
 /*Medio de entretenimiento*/
 SET @precio_parque_astronomicus = 300;
 INSERT INTO medio_entretenimiento (precio, nombre, tipo)
-VALUES (@precio_parque_astronomicus, 'Parque Astronomicus', 'PARQUE');
+VALUES (@precio_parque_astronomicus, 'Parque Astronomicus', @tipo_parque);
 SET @id_parque_astronomicus = LAST_INSERT_ID();
 /*Parque*/
 INSERT INTO parque (parque_id, ubicacion_id)
@@ -53,7 +53,7 @@ VALUES (@id_parque_astronomicus, @id_ubicacion_parque_astronomicus);
 /*Atracciones del parque Astronomicus*/
 SET @precio_la_jazzy_rue = 200;
 INSERT INTO medio_entretenimiento (precio, nombre, tipo)
-VALUES (@precio_la_jazzy_rue, 'La Jazzy Rue', 'ATRACCION');
+VALUES (@precio_la_jazzy_rue, 'La Jazzy Rue', @tipo_atraccion);
 SET @id_la_jazzy_rue = LAST_INSERT_ID();
 INSERT INTO
     atraccion (atraccion_id, parque_id, edad_desde, edad_hasta, altura_min)
@@ -61,7 +61,7 @@ VALUES(@id_la_jazzy_rue, @id_parque_astronomicus, 0, 99, '0 cm');
 
 SET @precio_april_in_paris = 150;
 INSERT INTO medio_entretenimiento (precio, nombre, tipo)
-VALUES (@precio_april_in_paris, 'April in Paris', 'ATRACCION');
+VALUES (@precio_april_in_paris, 'April in Paris', @tipo_atraccion);
 SET @id_april_in_paris = LAST_INSERT_ID();
 INSERT INTO
     atraccion (atraccion_id, parque_id, edad_desde, edad_hasta, altura_min)
@@ -83,7 +83,7 @@ VALUES(@cuit_empresa_cara,'STARBUCKS COFFE ARGENTINA S.R.L.', @id_ubicacion_empr
 SET @precio_bypass_fest = 300;
 INSERT INTO 
 	medio_entretenimiento (precio, nombre, tipo)
-VALUES (@precio_bypass_fest, 'Bypass Fest', 'EVENTO');
+VALUES (@precio_bypass_fest, 'Bypass Fest', @tipo_evento);
 SET @id_bypass_fest = LAST_INSERT_ID();
 
 INSERT INTO
@@ -102,7 +102,7 @@ VALUES(@cuit_empresa_barata, 'ANONIMUS S.A.', @id_ubicacion_empresa_org_barata);
 SET @precio_fiesta_bizarra = 200;
 INSERT INTO 
 	medio_entretenimiento (precio, nombre, tipo)
-VALUES (@precio_fiesta_bizarra, 'Fiesta Bizarra', 'EVENTO');
+VALUES (@precio_fiesta_bizarra, 'Fiesta Bizarra', @tipo_evento);
 SET @id_fiesta_bizarra = LAST_INSERT_ID();
 INSERT INTO
 	evento(evento_id, cuit_organizadora, ubicacion_id, horario_desde, horario_hasta)

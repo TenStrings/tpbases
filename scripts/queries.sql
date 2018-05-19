@@ -2,22 +2,32 @@ USE tpbases;
 
 SHOW COLUMNS FROM consumo;
 
--- TODO: usar un SP?
+-- TODO: usar un SP?  
+-- ****** estas tomando los consumos que aun no estan en facturas, o sea los del mes actual, deberiamos? ***** Tomi
+-- es un WHERE c.fecha es de mes anterior al actual, 
+-- tambien te comes las que facturaron 0 , agrego una version 2 para tener a todos y con los nombres.
+
 -- Facturacion total por id de atraccion
 CREATE OR REPLACE VIEW facturacionPorAtraccion AS
     SELECT c.medio_entretenimiento_id AS idAtraccion, SUM(importe) AS facturacionTotal
 	FROM consumo AS c
 	INNER JOIN atraccion AS atr ON c.medio_entretenimiento_id = atr.atraccion_id
 	GROUP BY idAtraccion;
--- Cuanto facturo la atraccion que mas facturo
+
+CREATE OR REPLACE VIEW facturacionPorAtraccion2 AS
+    SELECT m.medio_id AS id, m.nombre, SUM(IFNULL(importe,0)) AS total
+	FROM medio_entretenimiento AS m
+	LEFT JOIN consumo AS c ON  m.medio_id = c.medio_entretenimiento_id
+	GROUP BY id, m.nombre
+	HAVING m.tipo = @tipo_atraccion;
+
+-- Cuánto facturaron las atracciones que más facturaron
 SELECT MAX(facturacionTotal) INTO @maxFacturacionAtraccion FROM facturacionPorAtraccion;
 
 SELECT me.nombre AS nombreAtraccion
 FROM facturacionPorAtraccion AS fpa
 INNER JOIN medio_entretenimiento as me ON fpa.idAtraccion = me.medio_id
 WHERE fpa.facturacionTotal = @maxFacturacionAtraccion;
-
-
 
 -- Facturacion total por id de parque
 CREATE OR REPLACE VIEW facturacionPorParque AS
@@ -30,17 +40,19 @@ SELECT @maxFacturacionParque := MAX(facturacionTotal) FROM facturacionPorParque;
 
 --
 CREATE OR REPLACE VIEW atraccionesConNombre AS
-	SELECT atr.medio_id AS idAtraccion, me.nombre AS nombreAtraccion, atr.medio_parque_id AS idParqueCorrespondiente
+	SELECT atr.atraccion_id AS idAtraccion, me.nombre AS nombreAtraccion, atr.parque_id AS idParqueCorrespondiente
     FROM atraccion AS atr
-	INNER JOIN medio_de_entretenimiento AS me ON atr.medio_id = me.medio_id;
+	INNER JOIN medio_entretenimiento AS me ON atr.atraccion_id = me.medio_id;
 
+/*el primer left join no va porque todo parque tiene al menos una atraccion
+el segundo es consecuencia de que antes no pusiste que facturaban 0 */
 SELECT nombreParque, nombreAtraccion, MAX(importeTotal)
 FROM (
 	SELECT me.nombre AS nombreParque, atrc.nombreAtraccion, SUM(IFNULL(c.importe, 0)) AS importeTotal
 	FROM parque AS p
-	LEFT JOIN atraccionesConNombre AS atrc ON p.medio_id = atrc.idParqueCorrespondiente
-	INNER JOIN medio_de_entretenimiento AS me ON p.medio_id = me.medio_id
-	LEFT JOIN consumo AS c ON atrc.idAtraccion = c.medio_id
+	LEFT JOIN atraccionesConNombre AS atrc ON p.parque_id = atrc.idParqueCorrespondiente
+	INNER JOIN medio_entretenimiento AS me ON p.parque_id = me.medio_id
+	LEFT JOIN consumo AS c ON atrc.idAtraccion = c.medio_entretenimiento_id
 	GROUP BY nombreParque, atrc.nombreAtraccion
 ) AS parqueAtraccionImporteTotal
 GROUP BY nombreParque, nombreAtraccion;
