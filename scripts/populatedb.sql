@@ -668,7 +668,30 @@ VALUES(@nro_factura_tomas_febrero, @id_tarjeta_tomas_actualmente_activa, @id_el_
 
 /*** FIN FEBRERO 2018***/
 
+/*** MARZO 2018 ***/
 
+-- FACTURA IMPAGA  
+INSERT INTO
+	factura(fecha_emision, fecha_vencimiento, pago_id)
+VALUES('2018-04-01', '2018-04-15', NULL);
+SET @nro_factura_tomas_marzo = LAST_INSERT_ID();
+
+-- CONSUMOS
+
+-- Visita parque las venturas | total = 150+25+50 = 225 | acumulado marzo = 225
+INSERT INTO -- Ingresa a parque las venturas en oro -> $150
+	 consumo(numero_de_factura, numero_de_tarjeta, medio_entretenimiento_id, importe, fecha_hora)
+VALUES(@nro_factura_tomas_marzo, @id_tarjeta_tomas_actualmente_activa, @id_parque_las_venturas, @importe_parque_las_venturas_oro, '2018-02-17 9:01:10');
+
+INSERT INTO -- El argento en oro -> $ 25
+	 consumo(numero_de_factura, numero_de_tarjeta, medio_entretenimiento_id, importe, fecha_hora)
+VALUES(@nro_factura_tomas_marzo, @id_tarjeta_tomas_actualmente_activa, @id_el_argento, @importe_el_argento_oro, '2018-03-19 10:10:50');
+
+INSERT INTO -- La rusa loca en oro -> $50
+	 consumo(numero_de_factura, numero_de_tarjeta, medio_entretenimiento_id, importe, fecha_hora)
+VALUES(@nro_factura_tomas_marzo, @id_tarjeta_tomas_actualmente_activa, @id_la_rusa_loca, @importe_la_rusa_loca_oro, '2018-03-19 10:20:42');
+
+/*** FIN MARZO 2018 ***/
 
 /******** CLIENTE JACINTO (FRECUENCIA MEDIA) ********/
 
@@ -713,7 +736,7 @@ VALUES(@nro_factura_jacinto_enero, @id_tarjeta_jacinto, @id_fiesta_bizarra, @imp
 
 /*** FEBRERO 2018 ***/
 
--- PAGO
+-- PAGO  $ 560
 INSERT INTO
 	pago(fecha, cliente_id, medio_de_pago)
 VALUES('2018-03-10', @id_jacinto, @medio_de_pago_jacinto);
@@ -731,18 +754,18 @@ INSERT INTO -- Asiste a Bypass fest en plata -> $240 | acumulado de febrero = 24
 	 consumo(numero_de_factura, numero_de_tarjeta, medio_entretenimiento_id, importe, fecha_hora)
 VALUES(@nro_factura_jacinto_febrero, @id_tarjeta_jacinto, @id_bypass_fest, @importe_bypass_fest_plata, '2018-02-15 02:30:09');
 
--- Visita parque las venturas | total = 240+80+80 = 400 | acumulado febrero = 240 + 400 = 640
+-- Visita parque las venturas | total = 240+80 = 320 | acumulado febrero = 240 + 320 = 560
 INSERT INTO -- Ingresa a parque las venturas en plata -> $240
 	 consumo(numero_de_factura, numero_de_tarjeta, medio_entretenimiento_id, importe, fecha_hora)
 VALUES(@nro_factura_jacinto_febrero, @id_tarjeta_jacinto, @id_parque_las_venturas, @importe_parque_las_venturas_plata, '2018-02-20 9:31:10');
 
-INSERT INTO -- La rusa loca en plata -> $80
+INSERT INTO -- La rusa loca en plata -> $40
 	 consumo(numero_de_factura, numero_de_tarjeta, medio_entretenimiento_id, importe, fecha_hora)
-VALUES(@nro_factura_jacinto_febrero, @id_tarjeta_jacinto, @id_la_rusa_loca, @importe_la_rusa_loca_plata, '2018-02-20 10:20:42');
+VALUES(@nro_factura_jacinto_febrero, @id_tarjeta_jacinto, @id_el_argento, @importe_el_argento_plata, '2018-02-20 10:20:42');
 
-INSERT INTO -- La rusa loca en plata -> $80
+INSERT INTO -- La rusa loca en plata -> $40
 	 consumo(numero_de_factura, numero_de_tarjeta, medio_entretenimiento_id, importe, fecha_hora)
-VALUES(@nro_factura_jacinto_febrero, @id_tarjeta_jacinto, @id_la_rusa_loca, @importe_la_rusa_loca_plata, '2018-02-20 10:42:42');
+VALUES(@nro_factura_jacinto_febrero, @id_tarjeta_jacinto, @id_el_argento, @importe_el_argento_plata, '2018-02-20 10:42:42');
 
 
 /*** FIN FEBRERO 2018***/
@@ -785,17 +808,49 @@ VALUES(@nro_factura_carmichael_enero, @id_tarjeta_carmichael, @id_april_in_paris
 -- FACTURA IMPAGA 
 INSERT INTO
 	factura(fecha_emision, fecha_vencimiento, pago_id)
-VALUES('2018-03-01', '2018-03-15', @id_pago_carmichael_febrero);
+VALUES('2018-03-01', '2018-03-15', NULL);
 SET @nro_factura_carmichael_febrero = LAST_INSERT_ID();
 
--- CONSUMOS
+-- CONSUMOS total = 290 + 480 = 770
 
 INSERT INTO -- Asiste a Bypass fest en bronce -> $290 | acumulado de febrero = 290
 	 consumo(numero_de_factura, numero_de_tarjeta, medio_entretenimiento_id, importe, fecha_hora)
 VALUES(@nro_factura_carmichael_febrero, @id_tarjeta_carmichael, @id_bypass_fest, @importe_bypass_fest_plata, '2018-02-15 02:35:09');
 
+-- Visita parque astronomicus -> total = 300+180 = 480  
+INSERT INTO -- Ingresa a parque astronomicus en bronce -> $300 
+	 consumo(numero_de_factura, numero_de_tarjeta, medio_entretenimiento_id, importe, fecha_hora)
+VALUES(@nro_factura_carmichael_febrero, @id_tarjeta_carmichael, @id_parque_astronomicus, @importe_parque_astronomicus_bronce, '2018-02-20 12:05:10');
+
+INSERT INTO -- Ingresa la jacey rue en bronce-> $180
+	 consumo(numero_de_factura, numero_de_tarjeta, medio_entretenimiento_id, importe, fecha_hora)
+VALUES(@nro_factura_carmichael_febrero, @id_tarjeta_carmichael, @id_la_jazzy_rue, @importe_la_jazzy_rue_bronce, '2018-02-20 12:10:10');
 
 /*** FIN FEBRERO 2018***/
 
+/*** MARZO 2018 ***/
+INSERT INTO
+	factura(fecha_emision, fecha_vencimiento, pago_id)
+VALUES('2018-04-01', '2018-04-15', NULL);
+SET @nro_factura_carmichael_marzo = LAST_INSERT_ID();
+
+-- CONSUMOS total 480 
+
+-- Visita parque astronomicus -> total = 300+180 +150 = 630  
+INSERT INTO -- Ingresa a parque astronomicus en bronce -> $300 
+	 consumo(numero_de_factura, numero_de_tarjeta, medio_entretenimiento_id, importe, fecha_hora)
+VALUES(@nro_factura_carmichael_marzo, @id_tarjeta_carmichael, @id_parque_astronomicus, @importe_parque_astronomicus_bronce, '2018-03-21 12:05:10');
+
+
+INSERT INTO -- Ingresa a april in paris en bronce-> $150
+	 consumo(numero_de_factura, numero_de_tarjeta, medio_entretenimiento_id, importe, fecha_hora)
+VALUES(@nro_factura_carmichael_marzo, @id_tarjeta_carmichael, @id_april_in_paris, @importe_april_in_paris_bronce, '2018-03-21 12:07:10');
+
+INSERT INTO -- Ingresa la jacey rue en bronce-> $180
+	 consumo(numero_de_factura, numero_de_tarjeta, medio_entretenimiento_id, importe, fecha_hora)
+VALUES(@nro_factura_carmichael_marzo, @id_tarjeta_carmichael, @id_la_jazzy_rue, @importe_la_jazzy_rue_bronce, '2018-03-21 12:10:10');
+
+
+/*** FIN MARZO 2018***/
 
 /*  */ 
