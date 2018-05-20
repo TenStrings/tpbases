@@ -172,12 +172,12 @@ WHERE totalFacturado = (SELECT MAX(totalFacturado) FROM facturacionPorEmpresaOrg
 -- Los rangos de fecha se pueden dejar así o crear un sp para parametrizarlas como hicimos en camibios_categoria_entre
 
 -- Atracciones y parques en el mismo ranking
-SELECT me.nombre AS medioEntretenimiento, me.tipo, count(*) AS visitasTotales
+SELECT me.medio_id as idEntretenimiento, me.nombre AS medioEntretenimiento, me.tipo, count(*) AS visitasTotales
 FROM consumo AS cons
 INNER JOIN medio_entretenimiento AS me ON cons.medio_entretenimiento_id = me.medio_id
 WHERE me.tipo IN ('PARQUE', 'ATRACCION') AND
 	  cons.fecha_hora BETWEEN '2016-01-01' AND '2019-01-01' 
-GROUP BY medioEntretenimiento, me.tipo
+GROUP BY idEntretenimiento, medioEntretenimiento, me.tipo
 ORDER BY visitasTotales DESC;
 
 -- Ranking de atracciones más visitadas en rango de fechas
