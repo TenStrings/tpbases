@@ -72,6 +72,19 @@ WHERE f.pago_id IS NULL;
 
 -- Atracciones mas visitadas por cliente en rango de fechas 
 
+-- Por si se referian al ranking desc por cliente
+CREATE OR REPLACE VIEW rankAtraccionesVisitadasPorCliente AS
+	SELECT cli.cliente_id AS idCliente, cli.apellido AS apellidoCliente, cli.nombre AS nombreCliente,
+		   IFNULL(m.nombre, 'Ninguna') AS atraccion , count(m.nombre) AS visitasTotales
+	FROM consumo AS cons
+	INNER JOIN medio_entretenimiento AS m ON cons.medio_entretenimiento_id = m.medio_id
+	RIGHT JOIN tarjeta AS t ON cons.numero_de_tarjeta = t.numero_de_tarjeta -- Toma tarjetas sin consumos para contemplar a esos clientes
+	INNER JOIN cliente AS cli ON cli.cliente_id = t.cliente_id 
+	WHERE (m.tipo IS NULL OR m.tipo = 'ATRACCION') AND  -- Los is null son para contemplar a los clientes que no visitaron ninguna
+		  (cons.fecha_hora IS NULL OR cons.fecha_hora BETWEEN '2018-01-01' AND '2019-01-01') -- Reemplazar por fechas deseadas
+	GROUP BY idCliente, apellidoCliente, nombreCliente, atraccion
+	ORDER BY apellidoCliente ASC, visitasTotales DESC;
+
 -- Las que más visitadas por cliente (los maximos)
 SELECT cli.cliente_id AS idCliente, cli.apellido AS apellidoCliente, cli.nombre AS nombreCliente,
 	   IFNULL(m.nombre, 'Ninguna') AS atraccion , count(m.nombre) AS visitasTotales
@@ -87,19 +100,6 @@ HAVING count(m.nombre) = (SELECT MAX(visitasTotales)
                           WHERE idCliente = cli.cliente_id )
 ORDER BY apellidoCliente ASC, visitasTotales DESC;
 
--- Por si se referian al ranking desc por cliente
-CREATE OR REPLACE VIEW rankAtraccionesVisitadasPorCliente AS
-	SELECT cli.cliente_id AS idCliente, cli.apellido AS apellidoCliente, cli.nombre AS nombreCliente,
-		   IFNULL(m.nombre, 'Ninguna') AS atraccion , count(m.nombre) AS visitasTotales
-	FROM consumo AS cons
-	INNER JOIN medio_entretenimiento AS m ON cons.medio_entretenimiento_id = m.medio_id
-	RIGHT JOIN tarjeta AS t ON cons.numero_de_tarjeta = t.numero_de_tarjeta -- Toma tarjetas sin consumos para contemplar a esos clientes
-	INNER JOIN cliente AS cli ON cli.cliente_id = t.cliente_id 
-	WHERE (m.tipo IS NULL OR m.tipo = 'ATRACCION') AND  -- Los is null son para contemplar a los clientes que no visitaron ninguna
-		  (cons.fecha_hora IS NULL OR cons.fecha_hora BETWEEN '2018-01-01' AND '2019-01-01') -- Reemplazar por fechas deseadas
-	GROUP BY idCliente, apellidoCliente, nombreCliente, atraccion
-	ORDER BY apellidoCliente ASC, visitasTotales DESC;
-
 -- Cambios de categoria entre fechas
 SELECT cli.numero_de_documento AS nroDocumento, cli.apellido AS apellidoCliente, cli.nombre AS nombreCliente, 
 		   cam.fecha AS fechaCambio, cat.nombre AS nuevaCategoria
@@ -109,18 +109,6 @@ SELECT cli.numero_de_documento AS nroDocumento, cli.apellido AS apellidoCliente,
           cam.categoria_id = cat.categoria_id AND
           cam.fecha BETWEEN '2018-01-01' AND '2019-01-01'
 	ORDER BY nroDocumento ASC, fechaCambio ASC;
-
-/* Quizás es un poco más claro como está escrito arriba :S
--- Cambios de categoría entre fechas
-SELECT cli.numero_de_documento AS nroDocumento, cli.apellido AS apellidoCliente, cli.nombre AS nombreCliente, 
-	   cam.fecha AS fechaCambio, cat.nombre AS nuevaCategoria
-FROM cambia_su AS cam
-INNER JOIN tarjeta AS t ON cam.numero_de_tarjeta = t.numero_de_tarjeta
-INNER JOIN cliente AS cli ON t.cliente_id = cli.cliente_id
-INNER JOIN categoria AS cat ON cam.categoria_id = cat.categoria_id
-WHERE cam.fecha BETWEEN '2018-01-01' AND '2019-01-01' -- Reemplazar por fechas parametrizadas
-ORDER BY nroDocumento ASC, fechaCambio ASC;
-*/
 
 -- Y si querian que las fechas esten parametrizadas podemos hacerlos con un sp
 delimiter //

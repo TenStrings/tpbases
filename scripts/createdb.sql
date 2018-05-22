@@ -57,7 +57,9 @@ CREATE TABLE categoria (
     monto_subida decimal(10,2) NOT NULL,
     monto_permanencia decimal(10,2) NOT NULL,
     PRIMARY KEY (categoria_id),
-    CHECK (nombre in ('BRONCE', 'PLATA', 'ORO'))
+    CHECK (nombre in ('BRONCE', 'PLATA', 'ORO')),
+    CHECK (monto_subida >= 0),
+    CHECK (monto_permanencia >= 0)
 );
 
 CREATE TABLE cambia_su (
@@ -96,7 +98,10 @@ CREATE TABLE atraccion (
     altura_min varchar(6) NOT NULL, -- CONVENCIÓN MEDIDA EN 'XX cm'
     PRIMARY KEY(atraccion_id),
     FOREIGN KEY (atraccion_id) REFERENCES medio_entretenimiento(medio_id),
-    FOREIGN KEY (parque_id) REFERENCES parque(parque_id)
+    FOREIGN KEY (parque_id) REFERENCES parque(parque_id),
+    CHECK (edad_desde <= edad_hasta),
+    CHECK (edad_desde >= 0)
+    
 );
 
 CREATE TABLE empresa_organizadora (
@@ -116,7 +121,8 @@ CREATE TABLE evento (
     PRIMARY KEY (evento_id),
     FOREIGN KEY (evento_id) REFERENCES medio_entretenimiento(medio_id),
     FOREIGN KEY (cuit_organizadora) REFERENCES empresa_organizadora(cuit),
-    FOREIGN KEY (ubicacion_id) REFERENCES ubicacion(ubicacion_id)
+    FOREIGN KEY (ubicacion_id) REFERENCES ubicacion(ubicacion_id),
+    CHECK (horario_desde <= horario_hasta)
 );
 
 CREATE TABLE permite_acceder (
@@ -125,7 +131,8 @@ CREATE TABLE permite_acceder (
     descuento integer unsigned NOT NULL,
     PRIMARY KEY (medio_id, categoria_id),
     FOREIGN KEY (medio_id) REFERENCES medio_entretenimiento(medio_id),
-    FOREIGN KEY (categoria_id) REFERENCES categoria(categoria_id)
+    FOREIGN KEY (categoria_id) REFERENCES categoria(categoria_id),
+    CHECK (descuento >= 0 and descuento <= 100)
 );
 
 
@@ -149,7 +156,9 @@ CREATE TABLE factura (
     fecha_vencimiento date NOT NULL,
     pago_id integer unsigned, -- si es NULL es que está impaga
     PRIMARY KEY (numero_de_factura),
-    FOREIGN KEY (pago_id) REFERENCES pago(pago_id) 
+    FOREIGN KEY (pago_id) REFERENCES pago(pago_id),
+	CHECK (fecha_emision <= fecha_vencimiento)
+     
 );
 
 CREATE TABLE consumo (
@@ -162,5 +171,21 @@ CREATE TABLE consumo (
     PRIMARY KEY (consumo_id),
     FOREIGN KEY (numero_de_factura) REFERENCES factura(numero_de_factura),
     FOREIGN KEY (numero_de_tarjeta) REFERENCES tarjeta(numero_de_tarjeta),
-    FOREIGN KEY (medio_entretenimiento_id) REFERENCES medio_entretenimiento(medio_id)
+    FOREIGN KEY (medio_entretenimiento_id) REFERENCES medio_entretenimiento(medio_id),
+    CHECK ( importe = 
+    ( 
+		(select precio from medio_entretenimiento as me 
+		where medio_entretenimiento_id = me.medio_id) * 
+		(100 - (select descuento from permite_acceder as pe 
+		where medio_entretenimiento_id = pe.medio_id and 
+		pe.categoria_id = (select categoria_id from cambia_su as cs 
+		where numero_de_tarjeta = cs.numero_de_tarjeta ))
+		)
+    ) / 100 ),
+    CHECK (
+		(select categoria_id from cambia_su as cs 
+			where numero_de_tarjeta = cs.numero_de_tarjeta ) IN 
+        (select categoria_id from permite_acceder as pe 
+			where medio_entretenimiento_id = pe.medio_id)
+        )
 );
