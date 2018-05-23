@@ -47,24 +47,6 @@ WHERE totalFacturadoAtraccion >= ALL (SELECT totalFacturadoAtraccion
 									  FROM facturacionPorAtraccionConParque AS fpap1 
 									  WHERE fpap1.idParque = fpap2.idParque);
 
-/* Esta estaba mal creo porque devuelve todas las atracciones para cada parque y creo que piden solo la que mas facturo para cada parque
-CREATE OR REPLACE VIEW atraccionesConNombre AS
-	SELECT atr.atraccion_id AS idAtraccion, me.nombre AS nombreAtraccion, atr.parque_id AS idParqueCorrespondiente
-    FROM atraccion AS atr
-	INNER JOIN medio_entretenimiento AS me ON atr.atraccion_id = me.medio_id;
-
-SELECT nombreParque, nombreAtraccion, MAX(importeTotal)
-FROM (
-	SELECT me.nombre AS nombreParque, atrc.nombreAtraccion, SUM(IFNULL(c.importe, 0)) AS importeTotal
-	FROM parque AS p
-	LEFT JOIN atraccionesConNombre AS atrc ON p.parque_id = atrc.idParqueCorrespondiente
-	INNER JOIN medio_entretenimiento AS me ON p.parque_id = me.medio_id
-	LEFT JOIN consumo AS c ON atrc.idAtraccion = c.medio_entretenimiento_id
-	GROUP BY nombreParque, atrc.nombreAtraccion
-) AS parqueAtraccionImporteTotal
-GROUP BY nombreParque, nombreAtraccion;
-*/
-
 -- Facturas impagas  
 SELECT f.numero_de_factura, f.fecha_vencimiento
 FROM factura AS f

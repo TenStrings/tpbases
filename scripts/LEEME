@@ -5,4 +5,6 @@
 
 *El procedimiento almacenado se encuentra en update_categories.sql y las queries en queries.sql
 
+*Tests propios: test_stored_procedure.sql se debe correr sin utilizar populatedb.sql
+
 Es decir, se debe correr en orden primero createdb, luego populatedb (recordar que se genera con gatherPopulation.py o gatherPopulation.sh dandole permisos de ejecución en el directorio) y luego lo que se quiera probar, queries o procedimiento almacenado.  

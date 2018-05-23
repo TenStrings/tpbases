@@ -148,8 +148,6 @@ CREATE TABLE pago (
     CHECK (medio_de_pago in ('VISA', 'AMEX', 'MASTERCARD'))
 );
 
--- El enunciado dice que tiene importes, quizas se refiere a que cuando vence4
--- el importe deberia ser otro, podriamos guardar un porcentaje de recargo para las vencidas
 CREATE TABLE factura ( 
     numero_de_factura integer unsigned AUTO_INCREMENT,
     fecha_emision date NOT NULL,
