@@ -82,6 +82,10 @@ precios = [round(np.random.uniform(49.99, 149.99), 2) for i in range(CANT_MEDIOS
 edad_minima = 10
 edad_maxima = 50
 altura_minima = 140
+start_hour = datetime.time(10, 00, 00).strftime("%H:%M %p")
+end_hour = datetime.time(20, 00, 00).strftime("%H:%M %p")
+
+
 
 medios = []
 #Parques
@@ -90,7 +94,9 @@ for i in range(CANT_PARQUES):
         "id": id_medio[i],
         "precio": precios[i],
         "nombre": nombre_parque[i],
-        "tipo": "PARQUE",
+        "tipo":{
+            "nombre":"PARQUE"
+        },
         "importes_consumos": []
     }
     medios.append(parque)
@@ -101,12 +107,14 @@ for i in range(CANT_PARQUES, CANT_PARQUES+CANT_ATRACCIONES):
         "id": id_medio[i],
         "precio": precios[i],
         "nombre": nombre_atraccion[i - CANT_PARQUES],
-        "tipo": "ATRACCION",
-        "edad_desde": edad_minima,
-        "edad_hasta": edad_maxima,
-        "altura_min": altura_minima,
-        "importes_consumos": [],
-        "id_parque": random.choice(medios[0:CANT_PARQUES])["id"]
+        "tipo":{
+            "nombre": "ATRACCION",
+            "edad_desde": edad_minima,
+            "edad_hasta": edad_maxima,
+            "altura_min": altura_minima,
+            "id_parque": random.choice(medios[0:CANT_PARQUES])["id"]
+        },
+        "importes_consumos": []
     }
     medios.append(atraccion)
 
@@ -116,7 +124,11 @@ for i in range(CANT_PARQUES+CANT_ATRACCIONES, CANT_MEDIOS):
         "id": id_medio[i],
         "precio": precios[i],
         "nombre": nombre_evento[i - (CANT_PARQUES+CANT_ATRACCIONES)],
-        "tipo": "EVENTO",
+        "tipo":{
+            "nombre":"EVENTO",
+            "horario_desde": start_hour,
+            "horario_hasta": end_hour,
+        },
         "importes_consumos": []
     }
     medios.append(evento)
@@ -140,7 +152,6 @@ for i in range(CANT_CONSUMOS):
     medio = random.choice(medios)
     precio_min = medio["precio"]
     tarjeta = tarjetas[(int(i/10))%CANT_TARJETAS] # 10 consumos consecutivos son de la misma tarjeta
-
     consumo = {
         "id": i,
         "importe": round(np.random.uniform(precio_min, precio_min + 100.0), 2), #Siempre el precio del medio con alguna variacion
@@ -148,13 +159,23 @@ for i in range(CANT_CONSUMOS):
         "medio_entretenimiento": {
             "id": medio["id"],
             "nombre": medio["nombre"],
-            "tipo": medio["tipo"]
+            "tipo": {
+                "nombre":medio["tipo"]["nombre"]
+            },
         },
         "nro_tarjeta": tarjeta["numero"],
         "nro_factura": None #Falta crear factura
     }
     medio["importes_consumos"] += [consumo["importe"]]
-    tarjeta["consumos"] += [{"id_medio": medio["id"], "nombre_medio": medio["nombre"], "tipo_medio": medio["tipo"]}]
+    tarjeta["consumos"] += [{
+        "medio_entretenimiento": {
+            "id": medio["id"],
+            "nombre": medio["nombre"],
+            "tipo": {
+                "nombre":medio["tipo"]["nombre"]
+            },
+        }
+    }]
     consumos.append(consumo)
 
 #Facturas
