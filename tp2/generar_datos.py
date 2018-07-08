@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 # EL SCRIPT
 import numpy as np
 import random
