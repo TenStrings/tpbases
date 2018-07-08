@@ -1,0 +1,167 @@
+//Cuando embebemos un documento con una referencia a si mismo, no embebemos la referencia.
+
+
+//JSON Schema Cliente
+{
+	"type": "object",
+	"title": "cliente",
+	"description": "Properties of a client",
+	"properties":{
+		"id": {"type":"integer"},
+		"nombre": {"type": "string"},
+		"apellido": {"type": "string"},
+		"dni": {"type": "integer"},
+		"medio_pago": {"type": "string"},
+		"telefonos": {"type": "array", "items": {"type": "string"}},
+		"tarjetas": {"type": "array", "items": {"type": "integer"}}
+	}
+}
+
+//JSON Schema Tarjeta
+{
+	"type": "object",
+	"title": "tarjeta",
+	"properties":{
+		"numero": {"type":"integer"},
+		"bloqueada": {"type": "boolean"},
+		"foto": {"type": "string"},
+		"consumos": {
+			"type": "array",
+			"items": {
+				"type": "object",
+				"properties": {
+					"id_medio": {"type": "integer"},
+					"nombre_medio": {"type": "string"},
+					"tipo_medio": {"type": "string", "enum": ["ATRACCION", "PARQUE", "EVENTO"]}
+				}
+			}
+		}
+	}
+}
+
+//JSON Schema Consumo
+{
+	"type": "object",
+	"title": "consumo",
+	"properties": {
+		"id": {"type": "integer"},
+		"fecha_hora": {"type": "string", "format": "date-time"},
+		"importe": {"type": "number"},
+		"medio_entretenimiento": {
+			"type": "object",
+			"properties": {
+				"nombre": {"type": "string"},
+				"tipo": {"type": "string", "enum": ["ATRACCION", "PARQUE", "EVENTO"]}
+			}
+		},
+		"nro_factura": {"type": "integer"},
+		"nro_tarjeta": {"type": "integer"}
+	}
+}
+
+//JSON Schema Medio de entretenimiento
+{
+	"type": "object",
+	"title": "consumo",
+	"properties": {
+		"id": {"type": "integer"},
+		"nombre": {"type": "string"},
+		"precio": {"type": "number"},
+		"importes_consumos": {
+			"type": "array",
+			"items": {
+				"type": "object",
+				"properties": {
+					"type": "number"
+				}
+			}
+		},
+		"tipo": {"type": "string", "enum": ["ATRACCION", "PARQUE", "EVENTO"]},
+		"altura_min": {"type": "integer"},
+		"edad_desde": {"type": "integer"},
+		"edad_hasta": {"type": "integer"},
+		"id_parque": {"type": "integer"},
+	},
+	"oneOf": [
+		{
+			"properties": {
+				"tipo": {"enum": ["EVENTO", "PARQUE"]}
+			},
+			"required": ["id", "nombre", "precio", "importes_consumos"]
+		},
+		{
+			"properties": {
+				"tipo": {"enum": ["ATRACCION"]}
+			},
+			"required": ["id", "nombre", "precio", "importes_consumos", "altura_min", "edad_desde", "edad_hasta", "id_parque"]
+		}	
+	]
+}
+
+//JSON Schema Pago
+{
+	"type": "object",
+	"title": "pago",
+	"properties": {
+		"id": {"type": "integer"},
+		"fecha": {"type": "string", "format": "date-time"},
+		"medio_pago": {"type": "string"},
+		"facturas": {
+			"type": "array",
+			"items": {
+				"type": "object",
+				"properties": {
+					"nro_factura": {"type": "integer"},
+					"consumos": {
+						"type": "array",
+						"items": {
+							"type": "object",
+							"properties": {
+								"importe": {"type": "number"},
+								"medio_entretenimiento": {
+									"type": "object",
+									"properties": {
+										"nombre": {"type": "string"},
+										"tipo": {"type": "string", "enum": ["ATRACCION", "PARQUE", "EVENTO"]}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+//JSON Schema Factura
+{
+	"type": "object",
+	"properties": {
+		"numero": {"type": "integer"},
+		"fecha_emision": {"type": "string", "format": "date-time"},
+		"fecha_vencimiento": {"type": "string", "format": "date-time"},
+		"consumos": {
+			"type": "array",
+			"items": {
+				"type": "object",
+				"properties": {
+					"importe": {"type": "number"},
+					"medio_entretenimiento": {
+						"type": "object",
+						"properties": {
+							"nombre": {"type": "string"},
+							"tipo": {"type": "string", "enum": ["ATRACCION", "PARQUE", "EVENTO"]}
+						}
+					}
+				}
+			}
+		},
+		"id_pago": {"type": "integer"}
+	}
+}
+
+
+
+
+
