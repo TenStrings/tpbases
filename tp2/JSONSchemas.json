@@ -25,6 +25,7 @@
 		"numero": {"type":"integer"},
 		"bloqueada": {"type": "boolean"},
 		"foto": {"type": "string"},
+		"id_cliente": {"type": "integer"},
 		"consumos": {
 			"type": "array",
 			"items": {
@@ -50,6 +51,7 @@
 		"medio_entretenimiento": {
 			"type": "object",
 			"properties": {
+				"id": {"type": "integer"},
 				"nombre": {"type": "string"},
 				"tipo": {"type": "string", "enum": ["ATRACCION", "PARQUE", "EVENTO"]}
 			}
@@ -69,12 +71,7 @@
 		"precio": {"type": "number"},
 		"importes_consumos": {
 			"type": "array",
-			"items": {
-				"type": "object",
-				"properties": {
-					"type": "number"
-				}
-			}
+			"items": {"type": "number"}
 		},
 		"tipo": {"type": "string", "enum": ["ATRACCION", "PARQUE", "EVENTO"]},
 		"altura_min": {"type": "integer"},
@@ -121,6 +118,7 @@
 								"medio_entretenimiento": {
 									"type": "object",
 									"properties": {
+										"id": {"type": "integer"},
 										"nombre": {"type": "string"},
 										"tipo": {"type": "string", "enum": ["ATRACCION", "PARQUE", "EVENTO"]}
 									}
@@ -141,6 +139,7 @@
 		"numero": {"type": "integer"},
 		"fecha_emision": {"type": "string", "format": "date-time"},
 		"fecha_vencimiento": {"type": "string", "format": "date-time"},
+		"id_pago": {"type": "integer"},
 		"consumos": {
 			"type": "array",
 			"items": {
@@ -150,14 +149,14 @@
 					"medio_entretenimiento": {
 						"type": "object",
 						"properties": {
+							"id": {"type": "integer"},
 							"nombre": {"type": "string"},
 							"tipo": {"type": "string", "enum": ["ATRACCION", "PARQUE", "EVENTO"]}
 						}
 					}
 				}
 			}
-		},
-		"id_pago": {"type": "integer"}
+		}
 	}
 }
 

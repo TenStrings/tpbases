@@ -71,8 +71,8 @@ nombre_evento = ["evento" + str(i + 1) for i in range(10)]
 id_medio = [i + 1 for i in range(40)]
 precios = [round(np.random.uniform(49.99, 149.99), 2) for i in range(40)]
 edad_minima = 10
-edad_maxima = 17
-altura_minima = 150
+edad_maxima = 50
+altura_minima = 140
 
 medios = []
 #Parques
@@ -82,7 +82,7 @@ for i in range(5):
 		"precio": precios[i],
 		"nombre": nombre_parque[i],
 		"tipo": "PARQUE",
-		"importes": []
+		"importes_consumos": []
 	}
 	medios.append(parque)
 
@@ -96,7 +96,7 @@ for i in range(5, 30):
 		"edad_desde": edad_minima,
 		"edad_hasta": edad_maxima,
 		"altura_min": altura_minima,
-		"importes": []
+		"importes_consumos": []
 	}
 	medios.append(atraccion)
 
@@ -107,7 +107,7 @@ for i in range(30, 40):
 		"precio": precios[i],
 		"nombre": nombre_evento[i - 30],
 		"tipo": "EVENTO",
-		"importes": []
+		"importes_consumos": []
 	}
 	medios.append(evento)
 
@@ -118,11 +118,8 @@ consumos = []
 start_date = datetime.datetime.strptime('1/1/2015 1:30 PM', '%d/%m/%Y %I:%M %p')
 end_date = datetime.datetime.strptime('31/12/2018 4:50 AM', '%d/%m/%Y %I:%M %p')
 
+#Devuelve una fecha random entre start y end
 def random_date(start, end):
-    """
-    This function will return a random datetime between two datetime 
-    objects.
-    """
     delta = end - start
     int_delta = (delta.days * 24 * 60 * 60) + delta.seconds
     random_second = random.randrange(int_delta)
@@ -132,10 +129,12 @@ def random_date(start, end):
 
 for i in range(CANT_CONSUMOS):
 	medio = random.choice(medios)
-	tarjeta = tarjetas[(int(i/10))%CANT_TARJETAS]
+	precio_min = medio["precio"]
+	tarjeta = tarjetas[(int(i/10))%CANT_TARJETAS] # 10 consumos consecutivos son de la misma tarjeta
+	
 	consumo = {
 		"id": i,
-		"importe": round(np.random.uniform(49.99,149.99)), #Los precios pueden bajar o subir para la misma atraccion
+		"importe": round(np.random.uniform(precio_min, precio_min + 100.0), 2), #Siempre el precio del medio con alguna variacion
 		"fecha_hora": str(random_date(start_date, end_date)),
 		"medio_entretenimiento": {
 			"id": medio["id"],
@@ -145,7 +144,7 @@ for i in range(CANT_CONSUMOS):
 		"nro_tarjeta": tarjeta["numero"],
 		"nro_factura": None #Falta crear factura	
 	}
-	medio["importes"] += [consumo["importe"]]
+	medio["importes_consumos"] += [consumo["importe"]]
 	tarjeta["consumos"] += [{"id_medio": medio["id"], "nombre_medio": medio["nombre"], "tipo_medio": medio["tipo"]}]
 	consumos.append(consumo)
 
