@@ -199,43 +199,28 @@ for i in range(CANT_PAGOS):
 
 def dumpToFile(listDic, filename):
 	with open(filename, 'w') as f:
-		for dic in listDic:
-			f.write(json.dumps(dic))
-			f.write("\n")
+	    f.write(json.dumps(listDic))
 
 
 print "----------- Clientes -----------------"
 
-dumpToFile(clientes, "clientes.dat")
+dumpToFile(clientes, "clientes.json")
 
 print "----------- Tarjetas -----------------"
-dumpToFile(tarjetas, "tarjetas.dat")
+dumpToFile(tarjetas, "tarjetas.json")
 
 
 print "----------- Pagos -----------------"
-dumpToFile(pagos, "pagos.dat")
+dumpToFile(pagos, "pagos.json")
 
 print "----------- Facturas -----------------"
-dumpToFile(facturas, "facturas.dat")
+dumpToFile(facturas, "facturas.json")
 
 
 print "----------- Medios de entretenimiento -----------------"
-dumpToFile(medios, "medios.dat")
+dumpToFile(medios, "medios.json")
 
 
 print "----------- Consumos -----------------"
-dumpToFile(consumos, "consumos.dat")
-
-
-
-
-
-
-
-
-
-
-
-
-
+dumpToFile(consumos, "consumos.json")
 
