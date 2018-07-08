@@ -14,13 +14,13 @@ def queryd(id_parque):
             r.row.merge(lambda d:
             {
                 'total_consumos': r.sum(d['importes_consumos'])
-            }).without('importes_consumos')
+            })
         ).\
-        pluck('id', 'total_consumos')
+        pluck('id', 'nombre', 'total_consumos')
 
 if __name__ == '__main__':
     if(len(sys.argv) != 2):
-        print(u"Ingresar el id de la atracción")
+        print(u"Ingresar el id del parque")
     else:
         conn = r.connect()
         conn.use('tp2')
