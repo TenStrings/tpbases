@@ -7,8 +7,8 @@ def queryd(id_parque):
     #Si se la importa, hay que llamarla con run(conn)
     return r.table("medio_entretenimiento").\
         filter(
-            r.row['tipo'] == 'ATRACCION' and
-            r.row['id_parque'] == id_parque
+            r.row['tipo']['nombre'] == 'ATRACCION' and
+            r.row['tipo']['id_parque'] == id_parque
         ).\
         map(
             r.row.merge(lambda d:
