@@ -81,16 +81,16 @@
 				}
 			},
 			"required":["id","nombre","tipo"]
-		},
-		"required":["id","fecha_hora","importe","nro_factura","nro_tarjeta","medio_entretenimiento"],
-		"additionalProperties": false
-	}
+		}
+	},
+	"required":["id","fecha_hora","importe","nro_factura","nro_tarjeta","medio_entretenimiento"],
+	"additionalProperties": false
 }
 
 //JSON Schema Medio de entretenimiento
 {
 	"type": "object",
-	"title": "consumo",
+	"title": "medio_entretenimiento",
 	"properties": {
 		"id": {"type": "integer"},
 		"nombre": {"type": "string"},
@@ -126,7 +126,7 @@
 				{	"properties": {
 						"nombre": {"enum": ["EVENTO"]}
 					},
-					"required": ["horario_desde","horario_hastar"],
+					"required": ["horario_desde","horario_hasta"],
 					"additionalProperties": false
 				}
 			]
