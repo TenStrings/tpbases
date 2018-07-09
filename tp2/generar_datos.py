@@ -150,11 +150,11 @@ def random_date(start, end):
 
 for i in range(CANT_CONSUMOS):
     medio = random.choice(medios)
-    precio_min = medio["precio"]
+    precio_max = medio["precio"]
     tarjeta = tarjetas[(int(i/10))%CANT_TARJETAS] # 10 consumos consecutivos son de la misma tarjeta
     consumo = {
         "id": i,
-        "importe": round(np.random.uniform(precio_min, precio_min + 100.0), 2), #Siempre el precio del medio con alguna variacion
+        "importe": round(np.random.uniform(precio_max - 50.0, precio_max), 2), #Siempre el precio del medio con alguna variacion
         "fecha_hora": str(random_date(start_date, end_date)),
         "medio_entretenimiento": {
             "id": medio["id"],
