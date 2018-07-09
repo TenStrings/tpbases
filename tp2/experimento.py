@@ -3,6 +3,7 @@ import json
 import numpy as np
 import seaborn as sns
 import pandas as pd
+from graficador import plot
 
 conn = r.connect()
 
@@ -36,15 +37,15 @@ consumos = json.load(f)
 f.close()
 
 docs_por_medicion = 500
-particiones = [consumos[i : i + docs_por_medicion] for i in range(0, len(consumos), docs_por_medicion)]
-print(len(particiones))
+particiones = [consumos[i : i + docs_por_medicion]
+    for i in range(0, len(consumos), docs_por_medicion)]
 
 data = {'cant_docs_total': [], 'cant_docs_shard': [], 'shard': []}
 
 docs_agregados = 0
 for i, p in enumerate(particiones):
     r.table('consumo').wait().run(conn)
-    print('Insertando bloque ' + str(i+1))
+    print('Insertando bloque ' + str(i+1) + '/' + str(len(particiones)))
     r.table('consumo').insert(p).run(conn)
     docs_agregados += docs_por_medicion
     print('Rebalanceando')
@@ -60,4 +61,4 @@ for i, p in enumerate(particiones):
 df = pd.DataFrame(data=data)
 df.to_csv("datos_exp.csv")
 
-
+plot()
