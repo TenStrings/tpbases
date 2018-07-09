@@ -2,6 +2,7 @@
 from __future__ import print_function
 import rethinkdb as r
 import sys
+import json
 
 ##################################        
 ############ EJ 2.4.a ############
@@ -38,7 +39,8 @@ def visitasAtrPorParque(parque_id):
                 'visitas': r.count(d['importes_consumos'])
             })
         ).\
-        pluck('id', 'nombre', 'visitas')
+        pluck('id', 'nombre', 'visitas').\
+        order_by(r.desc('visitas'))
 
 ###### MAP REDUCE VERSION?
 
@@ -62,7 +64,9 @@ def mapReduceVisitasAtrPorParque(parque_id):
                 'visitas': left['visitas'] + right['visitas']
             }).\
         ungroup().\
-        map(lambda group: group['reduction'])
+        map(lambda group: group['reduction']).\
+        order_by(r.desc('visitas'))
+
 ##################################        
 ############ EJ 2.4.c ############
 
@@ -110,6 +114,8 @@ def importesPorAtraccionEnParque(parque_id):
         ).\
         pluck('id', 'nombre', 'total_consumos')
 
+def printCursor(reqlcursor):
+    print(json.dumps(list(reqlcursor), indent = 4))
 
 ##################################        
 ############   TEST   ############
@@ -118,20 +124,21 @@ if __name__ == '__main__':
     input_id = 2
     if(len(sys.argv) == 2):
         input_id = int(sys.argv[1])
-    conn = r.connect()
-    conn.use('tp2')
+    conn = r.connect(db='tp2').repl()
+
     print('ATRACCIONES POR CLIENTE:', input_id, '- EJ1')
-    for value in atrPorCliente(input_id).run(conn):
-        print(value)
+    printCursor(atrPorCliente(input_id).run())
+
     print('VISITAS A ATRACIONES POR PARQUE:', input_id, '- EJ2')
-    for value in visitasAtrPorParque(input_id).run(conn):
-        print(value)
+    printCursor(visitasAtrPorParque(input_id).run())
+
     print('VISITAS A ATRACIONES POR PARQUE(MAP REDUCE):', input_id, '- EJ2')
-    for value in mapReduceVisitasAtrPorParque(input_id).run(conn):
-        print(value) 
+    printCursor(mapReduceVisitasAtrPorParque(input_id).run())
+
     print('TOP FIVE EVENTOS - EJ3')
-    for value in topFiveEventos().run(conn):
-        print(value)
+    printCursor(topFiveEventos().run())
+
+    
     print('ATRACCIONES POR PARQUE:', input_id, '- EJ4')
-    for value in importesPorAtraccionEnParque(input_id).run(conn):
-        print(value)
+    printCursor(importesPorAtraccionEnParque(input_id).run())
+
