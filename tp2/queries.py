@@ -8,19 +8,13 @@ import json
 ############ EJ 2.4.a ############
 
 def atrPorClienteConRepeticiones(cliente_id): 
-    return r.table('tarjeta').\
-        filter( r.row['id_cliente'] == cliente_id).\
-        concat_map(
-            lambda doc: doc['consumos'].\
-                concat_map(lambda cons: [
-                    {
-                    'id': cons['medio_entretenimiento']['id'],
-                    'nombre': cons['medio_entretenimiento']['nombre'],
-                    'tipo': cons['medio_entretenimiento']['tipo']['nombre']
-                    }
-                    ])).\
-        filter( r.row['tipo'] == ('ATRACCION')).\
-        pluck('id', 'nombre')
+	return r.table('cliente').\
+	get(cliente_id)['tarjetas'].\
+	concat_map( lambda tid:
+		r.table('tarjeta').\
+		get(tid)['consumos']['medio_entretenimiento']).\
+	filter(r.row['tipo']['nombre'] == ('ATRACCION')).\
+	pluck('id', 'nombre')
 
 def atrPorCliente(cliente_id):
     return atrPorClienteConRepeticiones(cliente_id).distinct()
