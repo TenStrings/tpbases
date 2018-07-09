@@ -6,22 +6,6 @@ import sys
 ##################################        
 ############ EJ 2.4.a ############
 
-def visitasAtrPorParque(parque_id): 
-    return r.table('medio_entretenimiento').\
-        filter(
-            r.row['tipo']['nombre'] == 'ATRACCION' and
-            r.row['tipo']['id_parque'] == parque_id
-        ).map(
-            r.row.merge(lambda d:
-            {
-                'visitas': r.count(d['importes_consumos'])
-            })
-        ).\
-        pluck('id', 'nombre', 'visitas')
-
-##################################        
-############ EJ 2.4.b ############
-
 def atrPorClienteConRepeticiones(cliente_id): 
     return r.table('tarjeta').\
         filter( r.row['id_cliente'] == cliente_id).\
@@ -40,6 +24,45 @@ def atrPorClienteConRepeticiones(cliente_id):
 def atrPorCliente(cliente_id):
     return atrPorClienteConRepeticiones(cliente_id).distinct()
 
+##################################        
+############ EJ 2.4.b ############
+
+def visitasAtrPorParque(parque_id): 
+    return r.table('medio_entretenimiento').\
+        filter(
+            r.row['tipo']['nombre'] == 'ATRACCION' and
+            r.row['tipo']['id_parque'] == parque_id
+        ).map(
+            r.row.merge(lambda d:
+            {
+                'visitas': r.count(d['importes_consumos'])
+            })
+        ).\
+        pluck('id', 'nombre', 'visitas')
+
+###### MAP REDUCE VERSION?
+
+def mapReduceVisitasAtrPorParque(parque_id):
+    return r.table('medio_entretenimiento').\
+        filter(
+            r.row['tipo']['nombre'] == 'ATRACCION' and
+            r.row['tipo']['id_parque'] == parque_id
+        ).concat_map(lambda doc:
+            doc['importes_consumos'].map(lambda m: 
+            {   
+                'id': doc['id'],
+                'atraccion': doc['nombre'],
+                'visitas': 1
+            })).\
+        group('id').\
+        reduce(lambda left, right: 
+            {
+                'id': left['id'],
+                'atraccion': left['atraccion'],
+                'visitas': left['visitas'] + right['visitas']
+            }).\
+        ungroup().\
+        map(lambda group: group['reduction'])
 ##################################        
 ############ EJ 2.4.c ############
 
@@ -102,7 +125,10 @@ if __name__ == '__main__':
         print(value)
     print('VISITAS A ATRACIONES POR PARQUE:', input_id, '- EJ2')
     for value in visitasAtrPorParque(input_id).run(conn):
-        print(value)    
+        print(value)
+    print('VISITAS A ATRACIONES POR PARQUE(MAP REDUCE):', input_id, '- EJ2')
+    for value in mapReduceVisitasAtrPorParque(input_id).run(conn):
+        print(value) 
     print('TOP FIVE EVENTOS - EJ3')
     for value in topFiveEventos().run(conn):
         print(value)
