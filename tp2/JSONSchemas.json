@@ -36,8 +36,8 @@
 					"medio_entretenimiento": {
 						"type":"object",
 						"properties":{
-							"id_medio": {"type": "integer"},
-							"nombre_medio": {"type": "string"},
+							"id": {"type": "integer"},
+							"nombre": {"type": "string"},
 							"tipo": {
 								"type": "object",
 								"properties": {
@@ -46,7 +46,7 @@
 								"required":["nombre"]
 							}		
 						},
-						"required":["id_medio","nombre_medio","tipo_medio"]
+						"required":["id","nombre","tipo"]
 					}
 				},
 				"required": ["medio_entretenimiento"]
@@ -113,18 +113,18 @@
 			"required":["nombre"],
 			"oneOf": [
 				{	"properties": {
-						"tipo": {"enum": ["ATRACCION"]}
+						"nombre": {"enum": ["ATRACCION"]}
 					},
 				"required": ["altura_min", "edad_desde", "edad_hasta", "id_parque"],
 				"additionalProperties": false
 				},
 				{	"properties": {
-						"tipo": {"enum": ["PARQUE"]}
+						"nombre": {"enum": ["PARQUE"]}
 					},
 					"additionalProperties": false
 				},
 				{	"properties": {
-						"tipo": {"enum": ["EVENTO"]}
+						"nombre": {"enum": ["EVENTO"]}
 					},
 					"required": ["horario_desde","horario_hastar"],
 					"additionalProperties": false
